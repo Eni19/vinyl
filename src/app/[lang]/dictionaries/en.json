@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "description": "Portfolio and resume of {name}"
+  },
+  "nav": {
+    "switchLanguage": "Português",
+    "switchLanguageLabel": "View the site in Portuguese"
+  },
+  "home": {
+    "projects": "Projects",
+    "skills": "Skills",
+    "experience": "Experience",
+    "ongoing": "present"
+  },
+  "links": {
+    "live": "Visit site",
+    "code": "View code",
+    "paper": "Read paper",
+    "other": "Open"
+  }
+}

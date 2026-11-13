@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "slug": "enrique-susin",
+    "name": "Enrique R. Susin",
+    "headline": {
+      "pt": "Ciência da Computação na UNIFESP · Machine Learning e dados",
+      "en": "Computer Science at UNIFESP · Machine learning and data"
+    },
+    "summary": [
+      {
+        "pt": "Estudante de Ciência da Computação com foco em Machine Learning e análise de dados, com experiência prática no desenvolvimento de modelos, pipelines de dados e sistemas baseados em LLMs.",
+        "en": "Computer Science student focused on machine learning and data analysis, with hands-on experience building models, data pipelines and LLM-based systems."
+      },
+      {
+        "pt": "Atuação em iniciação científica em Aprendizado Federado com ênfase em privacidade, com artigo publicado em conferência internacional (PROPOR 2026) na área de NLP.",
+        "en": "Undergraduate researcher in federated learning with a focus on privacy, with a paper published at an international NLP conference (PROPOR 2026)."
+      },
+      {
+        "pt": "Interesse em aplicar Inteligência Artificial para resolver problemas reais envolvendo dados complexos, combinando base teórica sólida com implementação prática.",
+        "en": "Interested in applying AI to real problems involving complex data, pairing solid theory with practical implementation."
+      }
+    ],
+    "location": { "pt": "Brasil", "en": "Brazil" },
+    "contacts": [
+      { "kind": "email", "value": "enriquesusin@gmail.com", "url": "mailto:enriquesusin@gmail.com" },
+      { "kind": "phone", "value": "+55 (54) 98163-6527", "showOnSite": false },
+      { "kind": "github", "value": "github.com/Eni19", "url": "https://github.com/Eni19" },
+      {
+        "kind": "linkedin",
+        "value": "linkedin.com/in/enrique-susin",
+        "url": "https://www.linkedin.com/in/enrique-susin-3a4a36234/"
+      }
+    ]
+  },
+  "skillCategories": [
+    { "id": "ml", "label": { "pt": "Machine Learning e dados", "en": "Machine learning and data" } },
+    { "id": "programming", "label": { "pt": "Programação", "en": "Programming" } },
+    { "id": "databases", "label": { "pt": "Banco de dados", "en": "Databases" } },
+    { "id": "web", "label": { "pt": "Desenvolvimento web", "en": "Web development" } },
+    { "id": "tools", "label": { "pt": "Ferramentas", "en": "Tools" } },
+    { "id": "product", "label": { "pt": "Produto e design", "en": "Product and design" } }
+  ],
+  "skills": [
+    {
+      "id": "machine-learning",
+      "name": { "pt": "Machine Learning", "en": "Machine learning" },
+      "categoryId": "ml",
+      "keywords": ["ml", "aprendizado de máquina", "classification", "classificação"]
+    },
+    {
+      "id": "nlp",
+      "name": { "pt": "NLP", "en": "NLP" },
+      "categoryId": "ml",
+      "keywords": ["natural language processing", "processamento de linguagem natural", "topic modeling"]
+    },
+    {
+      "id": "rag",
+      "name": { "pt": "RAG", "en": "RAG" },
+      "categoryId": "ml",
+      "keywords": ["retrieval-augmented generation", "llm", "vector database"]
+    },
+    {
+      "id": "llms",
+      "name": { "pt": "LLMs", "en": "LLMs" },
+      "categoryId": "ml",
+      "keywords": ["large language models", "generative ai", "ia generativa"]
+    },
+    {
+      "id": "federated-learning",
+      "name": { "pt": "Aprendizado Federado", "en": "Federated learning" },
+      "categoryId": "ml",
+      "keywords": ["federated learning", "privacy", "privacidade"]
+    },
+    {
+      "id": "deep-learning",
+      "name": { "pt": "Deep Learning", "en": "Deep learning" },
+      "categoryId": "ml",
+      "keywords": ["neural networks", "redes neurais", "computer vision"]
+    },
+    {
+      "id": "data-analysis",
+      "name": { "pt": "Análise de dados", "en": "Data analysis" },
+      "categoryId": "ml",
+      "keywords": ["data science", "ciência de dados", "analytics"]
+    },
+    { "id": "python", "name": { "pt": "Python", "en": "Python" }, "categoryId": "programming" },
+    { "id": "pandas", "name": { "pt": "Pandas", "en": "Pandas" }, "categoryId": "programming" },
+    { "id": "numpy", "name": { "pt": "NumPy", "en": "NumPy" }, "categoryId": "programming" },
+    {
+      "id": "scikit-learn",
+      "name": { "pt": "Scikit-learn", "en": "Scikit-learn" },
+      "categoryId": "programming",
+      "keywords": ["sklearn"]
+    },
+    {
+      "id": "pytorch",
+      "name": { "pt": "PyTorch", "en": "PyTorch" },
+      "categoryId": "programming",
+      "keywords": ["torch"]
+    },
+    {
+      "id": "typescript",
+      "name": { "pt": "TypeScript", "en": "TypeScript" },
+      "categoryId": "programming",
+      "keywords": ["ts"]
+    },
+    {
+      "id": "javascript",
+      "name": { "pt": "JavaScript", "en": "JavaScript" },
+      "categoryId": "programming",
+      "keywords": ["js"]
+    },
+    {
+      "id": "postgresql",
+      "name": { "pt": "PostgreSQL", "en": "PostgreSQL" },
+      "categoryId": "databases",
+      "keywords": ["postgres", "sql"]
+    },
+    { "id": "sqlite", "name": { "pt": "SQLite", "en": "SQLite" }, "categoryId": "databases", "keywords": ["sql"] },
+    {
+      "id": "chroma",
+      "name": { "pt": "Chroma (banco vetorial)", "en": "Chroma (vector database)" },
+      "categoryId": "databases",
+      "keywords": ["vector database", "banco vetorial", "embeddings"]
+    },
+    { "id": "react", "name": { "pt": "React", "en": "React" }, "categoryId": "web" },
+    { "id": "nodejs", "name": { "pt": "Node.js", "en": "Node.js" }, "categoryId": "web", "keywords": ["node"] },
+    { "id": "html-css", "name": { "pt": "HTML e CSS", "en": "HTML and CSS" }, "categoryId": "web" },
+    { "id": "tailwind", "name": { "pt": "Tailwind CSS", "en": "Tailwind CSS" }, "categoryId": "web" },
+    {
+      "id": "git",
+      "name": { "pt": "Git", "en": "Git" },
+      "categoryId": "tools",
+      "keywords": ["github", "version control", "versionamento"]
+    },
+    { "id": "catia", "name": { "pt": "CATIA", "en": "CATIA" }, "categoryId": "tools", "keywords": ["cad", "3d"] },
+    { "id": "excel", "name": { "pt": "Excel", "en": "Excel" }, "categoryId": "tools" },
+    {
+      "id": "ux-ui",
+      "name": { "pt": "Design UX/UI", "en": "UX/UI design" },
+      "categoryId": "product",
+      "keywords": ["ux", "ui", "product design", "acessibilidade", "accessibility"]
+    },
+    {
+      "id": "team-leadership",
+      "name": { "pt": "Coordenação de equipes", "en": "Team coordination" },
+      "categoryId": "product",
+      "keywords": ["leadership", "liderança"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "amr-topic-modeling",
+      "title": { "pt": "Como o Brasil fala de superbactérias", "en": "How Brazil talks about superbugs" },
+      "kind": "research",
+      "summary": {
+        "pt": "Modelagem de tópicos com BERTopic e BERTimbau sobre 70.103 textos em português (Twitter, G1 e gov.br) acerca de resistência antimicrobiana.",
+        "en": "Topic modeling with BERTopic and BERTimbau over 70,103 Portuguese texts (Twitter, G1 and gov.br) about antimicrobial resistance."
+      },
+      "highlights": [
+        {
+          "pt": "Pipeline de NLP com limpeza, lematização (spaCy), embeddings BERTimbau, UMAP, HDBSCAN e BERTopic",
+          "en": "NLP pipeline with cleaning, lemmatization (spaCy), BERTimbau embeddings, UMAP, HDBSCAN and BERTopic"
+        },
+        {
+          "pt": "+24% de diversidade e +12,5% de coerência de tópicos em relação ao GSDMM",
+          "en": "+24% topic diversity and +12.5% topic coherence over GSDMM"
+        },
+        {
+          "pt": "Resultados publicados no PROPOR 2026 (ACL Anthology)",
+          "en": "Results published at PROPOR 2026 (ACL Anthology)"
+        }
+      ],
+      "skillIds": ["nlp", "machine-learning", "python", "data-analysis"],
+      "links": [
+        { "kind": "live", "url": "https://amr-topic-modeling.vercel.app/" },
+        { "kind": "code", "url": "https://github.com/Eni19/aries_topic_selector" },
+        { "kind": "paper", "url": "https://aclanthology.org/2026.propor-1.10/" }
+      ],
+      "featured": true
+    },
+    {
+      "id": "dlg-simulator",
+      "title": { "pt": "DLG / lab: vazamento de dados por gradientes", "en": "DLG / lab: data leakage from gradients" },
+      "kind": "research",
+      "summary": {
+        "pt": "Laboratório interativo que reconstrói imagens a partir de gradientes (Deep Leakage from Gradients), mostrando um risco de privacidade no aprendizado federado.",
+        "en": "Interactive lab that rebuilds images from gradients (Deep Leakage from Gradients), showing a privacy risk in federated learning."
+      },
+      "highlights": [
+        {
+          "pt": "Implementação didática do ataque DLG (NeurIPS 2019) com reconstrução real de imagens do CIFAR-100",
+          "en": "Teaching implementation of the DLG attack (NeurIPS 2019) with real CIFAR-100 image reconstruction"
+        },
+        {
+          "pt": "Versão local com defesas, cenário de aprendizado federado, lotes de até 8 imagens e suporte a CPU/GPU",
+          "en": "Local version with defenses, a federated learning scenario, batches of up to 8 images and CPU/GPU support"
+        }
+      ],
+      "skillIds": ["federated-learning", "deep-learning", "pytorch", "python"],
+      "links": [
+        { "kind": "live", "url": "https://dlgsimulator.vercel.app/" },
+        { "kind": "code", "url": "https://github.com/Eni19/dlg_simulator" }
+      ],
+      "featured": true
+    },
+    {
+      "id": "rag-qa",
+      "title": { "pt": "Sistema de QA com RAG", "en": "RAG question answering system" },
+      "kind": "personal",
+      "summary": {
+        "pt": "Perguntas e respostas sobre documentos textuais com recuperação de contexto e rastreamento de fontes.",
+        "en": "Question answering over text documents with context retrieval and source tracking."
+      },
+      "highlights": [
+        {
+          "pt": "Pipeline com banco vetorial (Chroma) e integração com LLMs",
+          "en": "Pipeline with a vector database (Chroma) and LLM integration"
+        },
+        {
+          "pt": "Recuperação de contexto e geração de respostas com rastreamento de fontes",
+          "en": "Context retrieval and answer generation with source tracking"
+        }
+      ],
+      "skillIds": ["rag", "llms", "chroma", "python"],
+      "featured": true
+    },
+    {
+      "id": "image-captioning",
+      "title": { "pt": "Image Captioning com redes neurais", "en": "Image captioning with neural networks" },
+      "kind": "academic",
+      "summary": {
+        "pt": "Modelo de Deep Learning que gera descrições em texto a partir de imagens.",
+        "en": "Deep learning model that writes text descriptions of images."
+      },
+      "highlights": [
+        {
+          "pt": "Integração de visão computacional e NLP em um pipeline único",
+          "en": "Computer vision and NLP combined in a single pipeline"
+        }
+      ],
+      "skillIds": ["deep-learning", "nlp", "pytorch", "python"]
+    },
+    {
+      "id": "rpg-sheets",
+      "title": { "pt": "Plataforma de fichas de RPG", "en": "RPG character sheet platform" },
+      "kind": "personal",
+      "summary": {
+        "pt": "Aplicação full-stack para criar e gerenciar fichas de RPG com dados estruturados.",
+        "en": "Full-stack app for creating and managing RPG character sheets as structured data."
+      },
+      "highlights": [
+        {
+          "pt": "Aplicação full-stack com React, TypeScript, Node.js e SQLite",
+          "en": "Full-stack app with React, TypeScript, Node.js and SQLite"
+        },
+        {
+          "pt": "UI interativa com Tailwind e gerenciamento de estado em formulários dinâmicos",
+          "en": "Interactive UI with Tailwind and state management for dynamic forms"
+        }
+      ],
+      "skillIds": ["react", "typescript", "nodejs", "sqlite", "tailwind"]
+    }
+  ],
+  "experiences": [
+    {
+      "id": "librasmap",
+      "organization": "LibrasMap · UNIFESP",
+      "role": { "pt": "Idealizador e designer de produto", "en": "Founder and product designer" },
+      "kind": "extension",
+      "period": { "start": "2025-01" },
+      "highlights": [
+        {
+          "pt": "Idealização e design UX/UI de uma plataforma de mapas acessível à comunidade surda, com navegação visual, integração ao Google Maps e mais de 80 pontos de interesse catalogados em Libras",
+          "en": "Conceived and designed (UX/UI) a map platform accessible to the Deaf community, with visual navigation, Google Maps integration and 80+ points of interest catalogued in Brazilian Sign Language"
+        },
+        {
+          "pt": "Coordenação das equipes e liderança de reuniões semanais, traduzindo demandas da comunidade surda em requisitos, fluxos de navegação e funcionalidades",
+          "en": "Coordinated the teams and led weekly meetings, turning the Deaf community's needs into requirements, navigation flows and features"
+        }
+      ],
+      "skillIds": ["ux-ui", "team-leadership"]
+    },
+    {
+      "id": "federated-learning-research",
+      "organization": "UNIFESP",
+      "role": {
+        "pt": "Iniciação científica em Aprendizado Federado",
+        "en": "Undergraduate researcher, federated learning"
+      },
+      "kind": "research",
+      "period": { "start": "2025-01" },
+      "highlights": [
+        {
+          "pt": "Desenvolvimento e estudo de modelos de Aprendizado de Máquina Federado com foco em proteção de dados sensíveis",
+          "en": "Built and studied federated machine learning models focused on protecting sensitive data"
+        },
+        {
+          "pt": "Análise de trade-offs entre privacidade, desempenho e comunicação entre clientes",
+          "en": "Analyzed trade-offs between privacy, performance and client communication"
+        }
+      ],
+      "skillIds": ["federated-learning", "machine-learning", "pytorch", "python"]
+    },
+    {
+      "id": "safran",
+      "organization": "Safran Cabin",
+      "role": { "pt": "Estagiário de Publicações Técnicas", "en": "Technical Publications Intern" },
+      "kind": "internship",
+      "location": "Brasil",
+      "period": { "start": "2023-06", "end": "2024-01" },
+      "highlights": [
+        {
+          "pt": "Análise de projetos e modelos 3D no CATIA para identificar componentes e definir sequências de desmontagem para manuais técnicos aeronáuticos",
+          "en": "Analyzed designs and 3D models in CATIA to identify components and define disassembly sequences for aircraft technical manuals"
+        },
+        {
+          "pt": "Estruturação e validação de dados técnicos em Excel e controle de qualidade, investigando inconsistências, suas causas e ações corretivas em documentação produzida em inglês",
+          "en": "Structured and validated technical data in Excel and took part in quality control, investigating inconsistencies, their causes and corrective actions in English-language documentation"
+        }
+      ],
+      "skillIds": ["catia", "excel"]
+    }
+  ],
+  "publications": [
+    {
+      "id": "propor-2026",
+      "title": {
+        "pt": "Modelagem de tópicos aplicada à área de antibióticos",
+        "en": "Topic modeling applied to antibiotics discourse"
+      },
+      "venue": "PROPOR 2026",
+      "year": 2026,
+      "url": "https://aclanthology.org/2026.propor-1.10/",
+      "highlights": [
+        {
+          "pt": "Coautoria de estudo de Machine Learning com 70.103 documentos em português provenientes de Twitter, G1 e gov.br, voltado à análise de discurso sobre resistência antimicrobiana",
+          "en": "Co-authored a machine learning study of 70,103 Portuguese documents from Twitter, G1 and gov.br analyzing discourse on antimicrobial resistance"
+        }
+      ],
+      "skillIds": ["nlp", "machine-learning"],
+      "projectId": "amr-topic-modeling"
+    }
+  ],
+  "education": [
+    {
+      "id": "unifesp-cs",
+      "institution": "UNIFESP",
+      "degree": { "pt": "Bacharelado em Ciência da Computação", "en": "B.Sc. in Computer Science" },
+      "status": "in-progress"
+    }
+  ],
+  "courses": [
+    {
+      "id": "google-cybersecurity",
+      "name": {
+        "pt": "Google Cybersecurity Professional Certificate",
+        "en": "Google Cybersecurity Professional Certificate"
+      },
+      "issuer": "Google",
+      "status": "in-progress"
+    },
+    {
+      "id": "cs50-python",
+      "name": {
+        "pt": "CS50's Introduction to Programming with Python",
+        "en": "CS50's Introduction to Programming with Python"
+      },
+      "issuer": "Harvard",
+      "status": "completed",
+      "completedAt": "2024-05"
+    }
+  ],
+  "languages": [
+    { "name": { "pt": "Português", "en": "Portuguese" }, "level": "native" },
+    { "name": { "pt": "Inglês", "en": "English" }, "level": "advanced" },
+    { "name": { "pt": "Espanhol", "en": "Spanish" }, "level": "intermediate" }
+  ]
+}

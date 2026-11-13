@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "description": "Portfólio e currículo de {name}"
+  },
+  "nav": {
+    "switchLanguage": "English",
+    "switchLanguageLabel": "Ver o site em inglês"
+  },
+  "home": {
+    "projects": "Projetos",
+    "skills": "Competências",
+    "experience": "Experiência",
+    "ongoing": "atual"
+  },
+  "links": {
+    "live": "Ver o site",
+    "code": "Ver o código",
+    "paper": "Ler o artigo",
+    "other": "Abrir"
+  }
+}
