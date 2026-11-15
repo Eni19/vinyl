@@ -1,21 +1,97 @@
 {
   "meta": {
-    "description": "Portfolio and resume of {name}"
+    "description": "Portfolio of {name}: machine learning, research and product."
   },
   "nav": {
-    "switchLanguage": "Português",
-    "switchLanguageLabel": "View the site in Portuguese"
-  },
-  "home": {
-    "projects": "Projects",
-    "skills": "Skills",
+    "label": "Sections",
+    "projects": "Work",
+    "research": "Research",
     "experience": "Experience",
-    "ongoing": "present"
+    "contact": "Contact",
+    "switchLanguage": "PT",
+    "switchLanguageLabel": "View the site in Portuguese",
+    "cta": "Get in touch",
+    "skip": "Skip to content"
+  },
+  "hero": {
+    "lede": "I turn machine learning research into things people understand and use."
+  },
+  "projects": {
+    "kind": {
+      "personal": "Personal project",
+      "academic": "Academic project",
+      "research": "Research",
+      "professional": "Professional project"
+    }
+  },
+  "research": {
+    "published": "Published at {venue}.",
+    "read": "Read the paper"
+  },
+  "experience": {
+    "education": "Education",
+    "courses": "Courses",
+    "languages": "Languages",
+    "ongoing": "present",
+    "inProgress": "in progress",
+    "levels": {
+      "native": "native",
+      "fluent": "fluent",
+      "advanced": "advanced",
+      "intermediate": "intermediate",
+      "basic": "basic"
+    }
+  },
+  "contact": {
+    "lede": "Want to talk about a role, a project or research? Write to me."
   },
   "links": {
-    "live": "Visit site",
+    "live": "Open the site",
     "code": "View code",
-    "paper": "Read paper",
+    "paper": "Read the paper",
     "other": "Open"
+  },
+  "project": {
+    "highlights": "What was built",
+    "skills": "Skills used",
+    "next": "Next project",
+    "paper": "Related paper"
+  },
+  "records": {
+    "shelf": "Records on the shelf",
+    "sideA": "Side A",
+    "sideB": "Side B",
+    "back": "Back to the shelf",
+    "next": "Next record",
+    "previous": "Previous record",
+    "hint": "Hover to pull a record out; click to play it.",
+    "hintTouch": "Tap a record to put it on the turntable.",
+    "credits": "Credits",
+    "fullStory": "See the full project",
+    "offRecord": "Away from code I draw and play guitar. Some sleeves on this shelf are my drawings.",
+    "themes": {
+      "research": {
+        "title": "Research",
+        "subtitle": "Papers and undergraduate research"
+      },
+      "experience": {
+        "title": "Experience",
+        "subtitle": "Work, outreach and education"
+      },
+      "skills": {
+        "title": "Skills",
+        "subtitle": "Tools and fields"
+      },
+      "contact": {
+        "title": "Contact",
+        "subtitle": "Let's talk"
+      }
+    }
+  },
+  "credits": {
+    "models": "3D models (CC BY 4.0):",
+    "crate": "crate",
+    "deck": "turntable",
+    "by": "by"
   }
 }

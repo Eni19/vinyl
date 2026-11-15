@@ -3,6 +3,7 @@
   "profile": {
     "slug": "enrique-susin",
     "name": "Enrique R. Susin",
+    "shortName": "Enrique Susin",
     "headline": {
       "pt": "Ciência da Computação na UNIFESP · Machine Learning e dados",
       "en": "Computer Science at UNIFESP · Machine learning and data"
@@ -21,11 +22,26 @@
         "en": "Interested in applying AI to real problems involving complex data, pairing solid theory with practical implementation."
       }
     ],
-    "location": { "pt": "Brasil", "en": "Brazil" },
+    "location": {
+      "pt": "Brasil",
+      "en": "Brazil"
+    },
     "contacts": [
-      { "kind": "email", "value": "enriquesusin@gmail.com", "url": "mailto:enriquesusin@gmail.com" },
-      { "kind": "phone", "value": "+55 (54) 98163-6527", "showOnSite": false },
-      { "kind": "github", "value": "github.com/Eni19", "url": "https://github.com/Eni19" },
+      {
+        "kind": "email",
+        "value": "enriquesusin@gmail.com",
+        "url": "mailto:enriquesusin@gmail.com"
+      },
+      {
+        "kind": "phone",
+        "value": "+55 (54) 98163-6527",
+        "showOnSite": false
+      },
+      {
+        "kind": "github",
+        "value": "github.com/Eni19",
+        "url": "https://github.com/Eni19"
+      },
       {
         "kind": "linkedin",
         "value": "linkedin.com/in/enrique-susin",
@@ -34,117 +50,274 @@
     ]
   },
   "skillCategories": [
-    { "id": "ml", "label": { "pt": "Machine Learning e dados", "en": "Machine learning and data" } },
-    { "id": "programming", "label": { "pt": "Programação", "en": "Programming" } },
-    { "id": "databases", "label": { "pt": "Banco de dados", "en": "Databases" } },
-    { "id": "web", "label": { "pt": "Desenvolvimento web", "en": "Web development" } },
-    { "id": "tools", "label": { "pt": "Ferramentas", "en": "Tools" } },
-    { "id": "product", "label": { "pt": "Produto e design", "en": "Product and design" } }
+    {
+      "id": "ml",
+      "label": {
+        "pt": "Machine Learning e dados",
+        "en": "Machine learning and data"
+      }
+    },
+    {
+      "id": "programming",
+      "label": {
+        "pt": "Programação",
+        "en": "Programming"
+      }
+    },
+    {
+      "id": "databases",
+      "label": {
+        "pt": "Banco de dados",
+        "en": "Databases"
+      }
+    },
+    {
+      "id": "web",
+      "label": {
+        "pt": "Desenvolvimento web",
+        "en": "Web development"
+      }
+    },
+    {
+      "id": "tools",
+      "label": {
+        "pt": "Ferramentas",
+        "en": "Tools"
+      }
+    },
+    {
+      "id": "product",
+      "label": {
+        "pt": "Produto e design",
+        "en": "Product and design"
+      }
+    }
   ],
   "skills": [
     {
       "id": "machine-learning",
-      "name": { "pt": "Machine Learning", "en": "Machine learning" },
+      "name": {
+        "pt": "Machine Learning",
+        "en": "Machine learning"
+      },
       "categoryId": "ml",
       "keywords": ["ml", "aprendizado de máquina", "classification", "classificação"]
     },
     {
       "id": "nlp",
-      "name": { "pt": "NLP", "en": "NLP" },
+      "name": {
+        "pt": "NLP",
+        "en": "NLP"
+      },
       "categoryId": "ml",
       "keywords": ["natural language processing", "processamento de linguagem natural", "topic modeling"]
     },
     {
       "id": "rag",
-      "name": { "pt": "RAG", "en": "RAG" },
+      "name": {
+        "pt": "RAG",
+        "en": "RAG"
+      },
       "categoryId": "ml",
       "keywords": ["retrieval-augmented generation", "llm", "vector database"]
     },
     {
       "id": "llms",
-      "name": { "pt": "LLMs", "en": "LLMs" },
+      "name": {
+        "pt": "LLMs",
+        "en": "LLMs"
+      },
       "categoryId": "ml",
       "keywords": ["large language models", "generative ai", "ia generativa"]
     },
     {
       "id": "federated-learning",
-      "name": { "pt": "Aprendizado Federado", "en": "Federated learning" },
+      "name": {
+        "pt": "Aprendizado Federado",
+        "en": "Federated learning"
+      },
       "categoryId": "ml",
       "keywords": ["federated learning", "privacy", "privacidade"]
     },
     {
       "id": "deep-learning",
-      "name": { "pt": "Deep Learning", "en": "Deep learning" },
+      "name": {
+        "pt": "Deep Learning",
+        "en": "Deep learning"
+      },
       "categoryId": "ml",
       "keywords": ["neural networks", "redes neurais", "computer vision"]
     },
     {
       "id": "data-analysis",
-      "name": { "pt": "Análise de dados", "en": "Data analysis" },
+      "name": {
+        "pt": "Análise de dados",
+        "en": "Data analysis"
+      },
       "categoryId": "ml",
       "keywords": ["data science", "ciência de dados", "analytics"]
     },
-    { "id": "python", "name": { "pt": "Python", "en": "Python" }, "categoryId": "programming" },
-    { "id": "pandas", "name": { "pt": "Pandas", "en": "Pandas" }, "categoryId": "programming" },
-    { "id": "numpy", "name": { "pt": "NumPy", "en": "NumPy" }, "categoryId": "programming" },
+    {
+      "id": "python",
+      "name": {
+        "pt": "Python",
+        "en": "Python"
+      },
+      "categoryId": "programming"
+    },
+    {
+      "id": "pandas",
+      "name": {
+        "pt": "Pandas",
+        "en": "Pandas"
+      },
+      "categoryId": "programming"
+    },
+    {
+      "id": "numpy",
+      "name": {
+        "pt": "NumPy",
+        "en": "NumPy"
+      },
+      "categoryId": "programming"
+    },
     {
       "id": "scikit-learn",
-      "name": { "pt": "Scikit-learn", "en": "Scikit-learn" },
+      "name": {
+        "pt": "Scikit-learn",
+        "en": "Scikit-learn"
+      },
       "categoryId": "programming",
       "keywords": ["sklearn"]
     },
     {
       "id": "pytorch",
-      "name": { "pt": "PyTorch", "en": "PyTorch" },
+      "name": {
+        "pt": "PyTorch",
+        "en": "PyTorch"
+      },
       "categoryId": "programming",
       "keywords": ["torch"]
     },
     {
       "id": "typescript",
-      "name": { "pt": "TypeScript", "en": "TypeScript" },
+      "name": {
+        "pt": "TypeScript",
+        "en": "TypeScript"
+      },
       "categoryId": "programming",
       "keywords": ["ts"]
     },
     {
       "id": "javascript",
-      "name": { "pt": "JavaScript", "en": "JavaScript" },
+      "name": {
+        "pt": "JavaScript",
+        "en": "JavaScript"
+      },
       "categoryId": "programming",
       "keywords": ["js"]
     },
     {
       "id": "postgresql",
-      "name": { "pt": "PostgreSQL", "en": "PostgreSQL" },
+      "name": {
+        "pt": "PostgreSQL",
+        "en": "PostgreSQL"
+      },
       "categoryId": "databases",
       "keywords": ["postgres", "sql"]
     },
-    { "id": "sqlite", "name": { "pt": "SQLite", "en": "SQLite" }, "categoryId": "databases", "keywords": ["sql"] },
+    {
+      "id": "sqlite",
+      "name": {
+        "pt": "SQLite",
+        "en": "SQLite"
+      },
+      "categoryId": "databases",
+      "keywords": ["sql"]
+    },
     {
       "id": "chroma",
-      "name": { "pt": "Chroma (banco vetorial)", "en": "Chroma (vector database)" },
+      "name": {
+        "pt": "Chroma (banco vetorial)",
+        "en": "Chroma (vector database)"
+      },
       "categoryId": "databases",
       "keywords": ["vector database", "banco vetorial", "embeddings"]
     },
-    { "id": "react", "name": { "pt": "React", "en": "React" }, "categoryId": "web" },
-    { "id": "nodejs", "name": { "pt": "Node.js", "en": "Node.js" }, "categoryId": "web", "keywords": ["node"] },
-    { "id": "html-css", "name": { "pt": "HTML e CSS", "en": "HTML and CSS" }, "categoryId": "web" },
-    { "id": "tailwind", "name": { "pt": "Tailwind CSS", "en": "Tailwind CSS" }, "categoryId": "web" },
+    {
+      "id": "react",
+      "name": {
+        "pt": "React",
+        "en": "React"
+      },
+      "categoryId": "web"
+    },
+    {
+      "id": "nodejs",
+      "name": {
+        "pt": "Node.js",
+        "en": "Node.js"
+      },
+      "categoryId": "web",
+      "keywords": ["node"]
+    },
+    {
+      "id": "html-css",
+      "name": {
+        "pt": "HTML e CSS",
+        "en": "HTML and CSS"
+      },
+      "categoryId": "web"
+    },
+    {
+      "id": "tailwind",
+      "name": {
+        "pt": "Tailwind CSS",
+        "en": "Tailwind CSS"
+      },
+      "categoryId": "web"
+    },
     {
       "id": "git",
-      "name": { "pt": "Git", "en": "Git" },
+      "name": {
+        "pt": "Git",
+        "en": "Git"
+      },
       "categoryId": "tools",
       "keywords": ["github", "version control", "versionamento"]
     },
-    { "id": "catia", "name": { "pt": "CATIA", "en": "CATIA" }, "categoryId": "tools", "keywords": ["cad", "3d"] },
-    { "id": "excel", "name": { "pt": "Excel", "en": "Excel" }, "categoryId": "tools" },
+    {
+      "id": "catia",
+      "name": {
+        "pt": "CATIA",
+        "en": "CATIA"
+      },
+      "categoryId": "tools",
+      "keywords": ["cad", "3d"]
+    },
+    {
+      "id": "excel",
+      "name": {
+        "pt": "Excel",
+        "en": "Excel"
+      },
+      "categoryId": "tools"
+    },
     {
       "id": "ux-ui",
-      "name": { "pt": "Design UX/UI", "en": "UX/UI design" },
+      "name": {
+        "pt": "Design UX/UI",
+        "en": "UX/UI design"
+      },
       "categoryId": "product",
       "keywords": ["ux", "ui", "product design", "acessibilidade", "accessibility"]
     },
     {
       "id": "team-leadership",
-      "name": { "pt": "Coordenação de equipes", "en": "Team coordination" },
+      "name": {
+        "pt": "Coordenação de equipes",
+        "en": "Team coordination"
+      },
       "categoryId": "product",
       "keywords": ["leadership", "liderança"]
     }
@@ -152,7 +325,10 @@
   "projects": [
     {
       "id": "amr-topic-modeling",
-      "title": { "pt": "Como o Brasil fala de superbactérias", "en": "How Brazil talks about superbugs" },
+      "title": {
+        "pt": "Como o Brasil fala de superbactérias",
+        "en": "How Brazil talks about superbugs"
+      },
       "kind": "research",
       "summary": {
         "pt": "Modelagem de tópicos com BERTopic e BERTimbau sobre 70.103 textos em português (Twitter, G1 e gov.br) acerca de resistência antimicrobiana.",
@@ -174,15 +350,117 @@
       ],
       "skillIds": ["nlp", "machine-learning", "python", "data-analysis"],
       "links": [
-        { "kind": "live", "url": "https://amr-topic-modeling.vercel.app/" },
-        { "kind": "code", "url": "https://github.com/Eni19/aries_topic_selector" },
-        { "kind": "paper", "url": "https://aclanthology.org/2026.propor-1.10/" }
+        {
+          "kind": "live",
+          "url": "https://amr-topic-modeling.vercel.app/"
+        },
+        {
+          "kind": "code",
+          "url": "https://github.com/Eni19/aries_topic_selector"
+        },
+        {
+          "kind": "paper",
+          "url": "https://aclanthology.org/2026.propor-1.10/"
+        }
       ],
-      "featured": true
+      "featured": true,
+      "media": [
+        {
+          "src": "/projects/amr-pt.png",
+          "alt": {
+            "pt": "Página inicial do site Como o Brasil fala de superbactérias, com o título e discos de antibiograma",
+            "en": "Home page of the How Brazil talks about superbugs site, with the title and antibiogram discs"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "pt"
+        },
+        {
+          "src": "/projects/amr-en.png",
+          "alt": {
+            "pt": "Versão em inglês do site sobre superbactérias",
+            "en": "Home page of the How Brazil talks about superbugs site, with the title and antibiogram discs"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "en"
+        },
+        {
+          "src": "/projects/amr-sources-pt.jpg",
+          "alt": {
+            "pt": "Seção O público: foto de um antibiograma e barras com documentos por palavra-chave",
+            "en": "The public section: an antibiogram photo and bars of documents per keyword"
+          },
+          "caption": {
+            "pt": "64.225 tweets, contados por palavra-chave.",
+            "en": "64,225 tweets, counted by keyword."
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "pt"
+        },
+        {
+          "src": "/projects/amr-sources-en.jpg",
+          "alt": {
+            "pt": "Seção The public, em inglês, com antibiograma e barras por palavra-chave",
+            "en": "The public section: an antibiogram photo and bars of documents per keyword"
+          },
+          "caption": {
+            "pt": "64.225 tweets, contados por palavra-chave.",
+            "en": "64,225 tweets, counted by keyword."
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "en"
+        },
+        {
+          "src": "/projects/amr-results-pt.jpg",
+          "alt": {
+            "pt": "Seção O modelo moderno leu melhor, com +24% de diversidade, +12,5% de coerência e 70.103 textos",
+            "en": "Results section with +24% diversity, +12.5% coherence and 70,103 texts"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "pt"
+        },
+        {
+          "src": "/projects/amr-results-en.jpg",
+          "alt": {
+            "pt": "Seção de resultados em inglês, com +24% de diversidade e +12,5% de coerência",
+            "en": "The modern model read better: +24% diversity, +12.5% coherence and 70,103 texts"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "en"
+        },
+        {
+          "src": "/projects/amr-topics-pt.jpg",
+          "alt": {
+            "pt": "Seção O que a IA encontrou: discos de tópicos e pesos das palavras do tema Vírus, bactéria, tudo junto",
+            "en": "Topics section in Portuguese with topic discs and word weights"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "pt"
+        },
+        {
+          "src": "/projects/amr-topics-en.jpg",
+          "alt": {
+            "pt": "Seção de tópicos em inglês, com discos e pesos das palavras",
+            "en": "What the AI found: topic discs and the word weights of one topic"
+          },
+          "width": 1440,
+          "height": 900,
+          "locale": "en"
+        }
+      ]
     },
     {
       "id": "dlg-simulator",
-      "title": { "pt": "DLG / lab: vazamento de dados por gradientes", "en": "DLG / lab: data leakage from gradients" },
+      "title": {
+        "pt": "DLG / lab: vazamento de dados por gradientes",
+        "en": "DLG / lab: data leakage from gradients"
+      },
       "kind": "research",
       "summary": {
         "pt": "Laboratório interativo que reconstrói imagens a partir de gradientes (Deep Leakage from Gradients), mostrando um risco de privacidade no aprendizado federado.",
@@ -200,14 +478,65 @@
       ],
       "skillIds": ["federated-learning", "deep-learning", "pytorch", "python"],
       "links": [
-        { "kind": "live", "url": "https://dlgsimulator.vercel.app/" },
-        { "kind": "code", "url": "https://github.com/Eni19/dlg_simulator" }
+        {
+          "kind": "live",
+          "url": "https://dlgsimulator.vercel.app/"
+        },
+        {
+          "kind": "code",
+          "url": "https://github.com/Eni19/dlg_simulator"
+        }
       ],
-      "featured": true
+      "featured": true,
+      "media": [
+        {
+          "src": "/projects/dlg.png",
+          "alt": {
+            "pt": "Página inicial do DLG / lab, com a pergunta Uma IA pode revelar as imagens que viu?",
+            "en": "DLG / lab home page (in Portuguese), asking whether an AI can reveal the images it saw"
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "src": "/projects/dlg-reconstruction.png",
+          "alt": {
+            "pt": "Reconstrução de uma imagem de dinossauro: ruído no início e contornos 50 iterações depois",
+            "en": "Reconstruction of a dinosaur image: noise at the start and outlines 50 iterations later"
+          },
+          "caption": {
+            "pt": "Do ruído aos primeiros contornos, em 50 iterações.",
+            "en": "From noise to first outlines in 50 iterations."
+          },
+          "width": 440,
+          "height": 230
+        },
+        {
+          "src": "/projects/dlg-questions.jpg",
+          "alt": {
+            "pt": "Seção O que você pode descobrir aqui, com três perguntas que guiam o experimento",
+            "en": "Section listing three questions that guide the experiment (in Portuguese)"
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "src": "/projects/dlg-metrics.jpg",
+          "alt": {
+            "pt": "Seção que explica as métricas SSIM, PSNR e MSE",
+            "en": "Section explaining the SSIM, PSNR and MSE metrics (in Portuguese)"
+          },
+          "width": 1440,
+          "height": 820
+        }
+      ]
     },
     {
       "id": "rag-qa",
-      "title": { "pt": "Sistema de QA com RAG", "en": "RAG question answering system" },
+      "title": {
+        "pt": "Sistema de QA com RAG",
+        "en": "RAG question answering system"
+      },
       "kind": "personal",
       "summary": {
         "pt": "Perguntas e respostas sobre documentos textuais com recuperação de contexto e rastreamento de fontes.",
@@ -228,7 +557,10 @@
     },
     {
       "id": "image-captioning",
-      "title": { "pt": "Image Captioning com redes neurais", "en": "Image captioning with neural networks" },
+      "title": {
+        "pt": "Image Captioning com redes neurais",
+        "en": "Image captioning with neural networks"
+      },
       "kind": "academic",
       "summary": {
         "pt": "Modelo de Deep Learning que gera descrições em texto a partir de imagens.",
@@ -244,7 +576,10 @@
     },
     {
       "id": "rpg-sheets",
-      "title": { "pt": "Plataforma de fichas de RPG", "en": "RPG character sheet platform" },
+      "title": {
+        "pt": "Plataforma de fichas de RPG",
+        "en": "RPG character sheet platform"
+      },
       "kind": "personal",
       "summary": {
         "pt": "Aplicação full-stack para criar e gerenciar fichas de RPG com dados estruturados.",
@@ -267,9 +602,14 @@
     {
       "id": "librasmap",
       "organization": "LibrasMap · UNIFESP",
-      "role": { "pt": "Idealizador e designer de produto", "en": "Founder and product designer" },
+      "role": {
+        "pt": "Idealizador e designer de produto",
+        "en": "Founder and product designer"
+      },
       "kind": "extension",
-      "period": { "start": "2025-01" },
+      "period": {
+        "start": "2025-01"
+      },
       "highlights": [
         {
           "pt": "Idealização e design UX/UI de uma plataforma de mapas acessível à comunidade surda, com navegação visual, integração ao Google Maps e mais de 80 pontos de interesse catalogados em Libras",
@@ -280,7 +620,8 @@
           "en": "Coordinated the teams and led weekly meetings, turning the Deaf community's needs into requirements, navigation flows and features"
         }
       ],
-      "skillIds": ["ux-ui", "team-leadership"]
+      "skillIds": ["ux-ui", "team-leadership"],
+      "featured": true
     },
     {
       "id": "federated-learning-research",
@@ -290,7 +631,9 @@
         "en": "Undergraduate researcher, federated learning"
       },
       "kind": "research",
-      "period": { "start": "2025-01" },
+      "period": {
+        "start": "2025-01"
+      },
       "highlights": [
         {
           "pt": "Desenvolvimento e estudo de modelos de Aprendizado de Máquina Federado com foco em proteção de dados sensíveis",
@@ -306,10 +649,16 @@
     {
       "id": "safran",
       "organization": "Safran Cabin",
-      "role": { "pt": "Estagiário de Publicações Técnicas", "en": "Technical Publications Intern" },
+      "role": {
+        "pt": "Estagiário de Publicações Técnicas",
+        "en": "Technical Publications Intern"
+      },
       "kind": "internship",
       "location": "Brasil",
-      "period": { "start": "2023-06", "end": "2024-01" },
+      "period": {
+        "start": "2023-06",
+        "end": "2024-01"
+      },
       "highlights": [
         {
           "pt": "Análise de projetos e modelos 3D no CATIA para identificar componentes e definir sequências de desmontagem para manuais técnicos aeronáuticos",
@@ -340,14 +689,47 @@
         }
       ],
       "skillIds": ["nlp", "machine-learning"],
-      "projectId": "amr-topic-modeling"
+      "projectId": "amr-topic-modeling",
+      "comparisons": [
+        {
+          "metric": {
+            "pt": "Diversidade de tópicos",
+            "en": "Topic diversity"
+          },
+          "baseline": {
+            "name": "GSDMM",
+            "value": 0.7467
+          },
+          "result": {
+            "name": "BERTopic",
+            "value": 0.9278
+          }
+        },
+        {
+          "metric": {
+            "pt": "Coerência (Cv)",
+            "en": "Coherence (Cv)"
+          },
+          "baseline": {
+            "name": "GSDMM",
+            "value": 0.4471
+          },
+          "result": {
+            "name": "BERTopic",
+            "value": 0.5032
+          }
+        }
+      ]
     }
   ],
   "education": [
     {
       "id": "unifesp-cs",
       "institution": "UNIFESP",
-      "degree": { "pt": "Bacharelado em Ciência da Computação", "en": "B.Sc. in Computer Science" },
+      "degree": {
+        "pt": "Bacharelado em Ciência da Computação",
+        "en": "B.Sc. in Computer Science"
+      },
       "status": "in-progress"
     }
   ],
@@ -373,8 +755,128 @@
     }
   ],
   "languages": [
-    { "name": { "pt": "Português", "en": "Portuguese" }, "level": "native" },
-    { "name": { "pt": "Inglês", "en": "English" }, "level": "advanced" },
-    { "name": { "pt": "Espanhol", "en": "Spanish" }, "level": "intermediate" }
+    {
+      "name": {
+        "pt": "Português",
+        "en": "Portuguese"
+      },
+      "level": "native"
+    },
+    {
+      "name": {
+        "pt": "Inglês",
+        "en": "English"
+      },
+      "level": "advanced"
+    },
+    {
+      "name": {
+        "pt": "Espanhol",
+        "en": "Spanish"
+      },
+      "level": "intermediate"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "violao",
+      "title": {
+        "pt": "Tocando no quarto",
+        "en": "Playing in my room"
+      },
+      "medium": {
+        "pt": "Lápis de cor e nanquim",
+        "en": "Coloured pencil and ink"
+      },
+      "media": {
+        "src": "/art/violao.webp",
+        "alt": {
+          "pt": "Autorretrato tocando violão, com duas guitarras penduradas na parede, em azul e lilás",
+          "en": "Self-portrait playing acoustic guitar with two electric guitars on the wall, in blue and lilac"
+        },
+        "width": 1598,
+        "height": 1800
+      }
+    },
+    {
+      "id": "sapos",
+      "title": {
+        "pt": "Sapos no lago",
+        "en": "Frogs on the pond"
+      },
+      "medium": {
+        "pt": "Lápis de cor e post-its",
+        "en": "Coloured pencil on sticky notes"
+      },
+      "media": {
+        "src": "/art/sapos.webp",
+        "alt": {
+          "pt": "Três sapos verde e amarelos recortados de post-its sobre vitórias-régias",
+          "en": "Three green and yellow frogs cut from sticky notes on lily pads"
+        },
+        "width": 1531,
+        "height": 1800
+      }
+    },
+    {
+      "id": "corvo",
+      "title": {
+        "pt": "Corvo",
+        "en": "Crow"
+      },
+      "medium": {
+        "pt": "Grafite sobre post-it marca-texto",
+        "en": "Graphite on a highlighter sticky note"
+      },
+      "media": {
+        "src": "/art/corvo.webp",
+        "alt": {
+          "pt": "Corvo desenhado a grafite sobre um post-it amarelo-limão",
+          "en": "Crow drawn in graphite on a lime-yellow sticky note"
+        },
+        "width": 1061,
+        "height": 1800
+      }
+    },
+    {
+      "id": "rostos",
+      "title": {
+        "pt": "Rostos e borboletas",
+        "en": "Faces and butterflies"
+      },
+      "medium": {
+        "pt": "Caneta esferográfica azul e laranja",
+        "en": "Blue and orange ballpoint pen"
+      },
+      "media": {
+        "src": "/art/rostos.webp",
+        "alt": {
+          "pt": "Cinco rostos desenhados à caneta azul e laranja, com borboletas em cima",
+          "en": "Five faces drawn in blue and orange ballpoint, with butterflies above"
+        },
+        "width": 1800,
+        "height": 1013
+      }
+    },
+    {
+      "id": "tubarao",
+      "title": {
+        "pt": "Tubarão-baleia",
+        "en": "Whale shark"
+      },
+      "medium": {
+        "pt": "Grafite",
+        "en": "Graphite"
+      },
+      "media": {
+        "src": "/art/tubarao.webp",
+        "alt": {
+          "pt": "Tubarão-baleia desenhado a grafite, com manchas claras",
+          "en": "Whale shark drawn in graphite, with pale spots"
+        },
+        "width": 1800,
+        "height": 1270
+      }
+    }
   ]
 }

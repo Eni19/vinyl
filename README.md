@@ -27,6 +27,8 @@ src/
   application/ports/     interfaces (PortfolioRepository)
   infrastructure/        implementações + composition root (container.ts)
   app/[lang]/            rotas Next.js, dicionários de UI
+  ui/records/            a estante: catálogo de discos (testado), cena 3D, capas, encartes
+  ui/panels/             blocos de HTML compartilhados (links, skills, destaques)
   proxy.ts               redireciona "/" para o idioma do visitante
 ```
 
@@ -47,7 +49,17 @@ Edite `content/<slug>/portfolio.json`. IDs em kebab-case. Projetos, experiência
 ## Roadmap
 
 - [x] **Fase 0, fundação:** Next 16, TypeScript, Tailwind 4, Zod, Vitest, CI, domínio e conteúdo PT/EN
-- [ ] **Fase 1, portfólio visual:** direção de arte, cena 3D (React Three Fiber), páginas de projeto
+- [x] **Fase 1, portfólio visual:** estante de discos 3D com toca-discos (React Three Fiber), encartes com lados A/B, páginas de projeto
 - [ ] **Fase 2, montador de currículo:** seleção, preview ao vivo, PDF (@react-pdf/renderer), variantes salvas por vaga
 - [ ] **Fase 3, vários usuários:** auth, Postgres, painel de edição, `/[usuario]`
 - [ ] **Fase 4, extras:** sugestão de skills e projetos a partir da descrição da vaga, import/export JSON Resume
+
+## Design
+
+O visual segue as skills `impeccable`, `design-taste-frontend` e `emil-design-eng`. O produto está descrito em `PRODUCT.md`, e as fotos de referência (o quarto e os desenhos) ficam em `design/references/`.
+
+- **A estante de discos:** a home é um móvel de discos em 3D (React Three Fiber) com um toca-discos em cima. Cada projeto e cada tema é um disco, com capa, contracapa (lista de faixas), lombada e selo, todos gerados a partir dos dados (`src/ui/records/catalog.ts`).
+- **Interação:** passar o mouse puxa o disco. Clicar coloca o vinil no toca-discos e abre o encarte com lado A e lado B (`src/ui/records/LinerNotes.tsx`).
+- **Toca-discos:** "Modern vinyl player", de alpaca. (Sketchfab, CC BY 4.0), comprimido com glTF-Transform e meshopt (`public/models/turntable.glb`). O crédito aparece na página.
+- **Sem WebGL ou sem JavaScript:** os discos viram capas em HTML e os encartes aparecem como página comum.
+- **Direção anterior:** o quadro de post-its continua guardado no branch `design/quadro`.

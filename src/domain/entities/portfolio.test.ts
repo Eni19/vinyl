@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { portfolioInput } from "@/test/fixtures";
 import { PeriodSchema } from "./common";
-import { PortfolioSchema } from "./portfolio";
+import { PortfolioSchema, mediaForLocale } from "./portfolio";
 
 function issuesOf(input: unknown): string[] {
   const result = PortfolioSchema.safeParse(input);
@@ -45,6 +45,40 @@ describe("PortfolioSchema", () => {
     const input = portfolioInput();
     input.projects[0].id = "My Project";
     expect(issuesOf(input).some((i) => i.startsWith("projects.0.id"))).toBe(true);
+  });
+});
+
+describe("gallery", () => {
+  const artwork = {
+    id: "crow",
+    title: { pt: "Corvo" },
+    medium: { pt: "Grafite" },
+    media: { src: "/art/corvo.webp", alt: { pt: "Corvo" }, width: 10, height: 10 },
+  };
+
+  it("defaults to empty and accepts artworks", () => {
+    expect(PortfolioSchema.parse(portfolioInput()).gallery).toEqual([]);
+    expect(PortfolioSchema.parse(portfolioInput({ gallery: [artwork] })).gallery).toHaveLength(1);
+  });
+
+  it("rejects duplicate artworks", () => {
+    expect(issuesOf(portfolioInput({ gallery: [artwork, artwork] }))).toContain('gallery: duplicate id "crow"');
+  });
+});
+
+describe("media", () => {
+  const shot = { src: "/projects/a.png", alt: { pt: "Tela", en: "Screen" }, width: 1440, height: 900 };
+
+  it("rejects pictures that are not public paths", () => {
+    const input = portfolioInput();
+    input.projects[0].media = [{ ...shot, src: "https://cdn.example.com/a.png" }];
+    expect(issuesOf(input).some((i) => i.startsWith("projects.0.media.0.src"))).toBe(true);
+  });
+
+  it("keeps language-neutral pictures and the ones made for the locale", () => {
+    const media = [shot, { ...shot, src: "/projects/pt.png", locale: "pt" as const }];
+    expect(mediaForLocale(media, "en").map((m) => m.src)).toEqual(["/projects/a.png"]);
+    expect(mediaForLocale(media, "pt")).toHaveLength(2);
   });
 });
 

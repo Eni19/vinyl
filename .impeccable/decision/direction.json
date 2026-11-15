@@ -1,0 +1,160 @@
+{
+  "title": "Escolha o mundo visual do portfólio",
+  "question": "O sorteio indicou o Quadro de aula. Fique com ele, escolha uma alternativa ou sorteie de novo.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Quadro de aula",
+      "kicker": "THE ROLL",
+      "lineage": "o quadro-negro das salas da UNIFESP, onde a pesquisa é explicada",
+      "thesis": "Cada projeto é explicado no quadro: o raciocínio, o diagrama e depois a coisa funcionando.",
+      "palette": ["#1e2a25", "#ebe7dc", "#f2cf4a", "#56655d"],
+      "materials": ["ardósia verde-escura", "giz e pó de giz", "manchas de apagador", "aulas anteriores mal apagadas"],
+      "viewport": "O quadro ocupa a tela inteira. O nome é escrito em giz, de borda a borda. Abaixo vem uma frase sobre o que você faz, e ao lado o diagrama do pipeline de um projeto se desenha sozinho. O contato aparece circulado em giz amarelo.",
+      "risk": "O quadro-negro é um clichê de 'nerd'. Letra cursiva pode parecer infantil, e giz claro sobre ardósia exige cuidado com o contraste.",
+      "raised": [
+        {
+          "from": "challenger-fight-poster",
+          "raise": "O nome ocupa o quadro de borda a borda, em escala de colisão, sem timidez."
+        },
+        {
+          "from": "challenger-cracktro",
+          "raise": "Profundidade é hierarquia: aulas anteriores mal apagadas ficam atrás, e o que está na frente é o que importa agora."
+        },
+        {
+          "from": "challenger-couture",
+          "raise": "Cada projeto ganha o quadro inteiro como uma lâmina completa, em sequência, e nunca vira card numa grade."
+        },
+        {
+          "from": "challenger-ikebana",
+          "raise": "O espaço vazio do quadro é ativo: a parte apagada também compõe a página."
+        },
+        {
+          "from": "challenger-oscilloscope",
+          "raise": "Tudo se mede por uma unidade só, a pauta do giz, que dá o ritmo de todos os textos e espaços."
+        }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "Atlas de embeddings",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "projeções UMAP e mapas de tópicos do BERTopic, da sua própria pesquisa",
+      "thesis": "O site é um mapa do seu trabalho projetado num espaço de significado: projetos, skills e artigos como pontos que formam grupos.",
+      "palette": ["#f1efe8", "#14171c", "#2f6df6", "#d8d3c4"],
+      "materials": ["nuvem de pontos em 3D", "rótulos de cluster", "papel de atlas"],
+      "viewport": "Uma nuvem de pontos em 3D que dá para girar, com grupos rotulados como tópicos (ML, privacidade, produto). O nome e o que você faz aparecem grandes, e passar o mouse num ponto revela o projeto.",
+      "risk": "Nuvens de partículas são o hero 3D mais comum em portfólios. É familiar, embora aqui saia direto da sua pesquisa."
+    },
+    {
+      "id": "challenger-storm",
+      "kind": "challenger",
+      "catalogId": "dream-surreal-impossible-worlds-alphabet-storm",
+      "label": "Tempestade de palavras",
+      "verdict": "competitive",
+      "lineage": "alphabet storm, fundido com os 70.103 textos do estudo de superbactérias",
+      "thesis": "Palavras soltas de tweets e notícias se condensam em tópicos e depois no seu nome e nos seus projetos. É NLP virando paisagem.",
+      "palette": ["#f7f6f2", "#111111", "#b9bdc4", "#8a8f96"],
+      "materials": ["uma grotesca monumental", "partículas de letras", "papel branco"],
+      "viewport": "Fundo branco onde uma chuva de letras pretas se junta em palavras de tópico e se assenta no seu nome. Rolar a página dispersa e recondensa as palavras em cada projeto.",
+      "case": "Mostra com clareza o lado NLP, mas não mostra o lado produto e design. Vence em clareza do mecanismo e perde em identificação do recrutador.",
+      "risk": "Pode virar efeito de partículas sem conteúdo, e a leitura sofre se a transformação não parar a tempo.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-alphabet-storm-hero.webp"
+    },
+    {
+      "id": "challenger-fight-poster",
+      "kind": "challenger",
+      "catalogId": "posters-covers-sleeves-fight-poster",
+      "label": "Cartaz de luta",
+      "verdict": "declined",
+      "lineage": "cartazes de boxe",
+      "thesis": "IA contra produto, os dois nomes colidindo num VS.",
+      "palette": ["#efe6d2", "#141414", "#c9a23a"],
+      "materials": ["papel jornal", "slab condensada"],
+      "viewport": "Duas metades espelhadas com o VS dourado no meio.",
+      "case": "Transforma em confronto algo que no seu trabalho é soma, e recrutador não se identifica com isso.",
+      "kept": "A coragem de escala: o nome preenche o espaço até a borda.",
+      "risk": "Lê como fantasia temática.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-fight-poster-hero.webp"
+    },
+    {
+      "id": "challenger-cracktro",
+      "kind": "challenger",
+      "catalogId": "operate-c-cracktro-scroller-queue",
+      "label": "Cracktro",
+      "verdict": "declined",
+      "lineage": "telas de abertura da demoscene",
+      "thesis": "Projetos como camadas de texto em bitmap sobre um vazio preto.",
+      "palette": ["#050505", "#efe9da", "#f0a020"],
+      "materials": ["fonte bitmap", "poeira em camadas"],
+      "viewport": "Uma linha de texto parada na frente e campos de pontos derivando atrás.",
+      "case": "Preto com um acento aceso é o padrão mais comum de portfólio de dev, e ele sai do seu mundo.",
+      "kept": "Profundidade como hierarquia: o que está mais à frente importa mais.",
+      "risk": "Fica parecendo cosplay retrô.",
+      "hero": "https://impeccable.style/worlds/cards/operate-c-cracktro-scroller-queue-hero.webp"
+    },
+    {
+      "id": "challenger-couture",
+      "kind": "challenger",
+      "catalogId": "pop-culture-shelf-couture-doll-atelier",
+      "label": "Ateliê de alta-costura",
+      "verdict": "declined",
+      "lineage": "lookbook de miniaturas",
+      "thesis": "Cada projeto como um look apresentado numa lâmina.",
+      "palette": ["#f4ede3", "#e9c9c4", "#111111", "#a3122a"],
+      "materials": ["papel-cartão marfim", "cetim", "papel de seda"],
+      "viewport": "Uma passarela de projetos, look a look.",
+      "case": "Não tem nada a ver com ML nem com o público de tech.",
+      "kept": "Cada peça apresentada inteira, em sequência, com margens de lookbook.",
+      "risk": "É uma fantasia sem ligação com o assunto.",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-couture-doll-atelier-hero.webp"
+    },
+    {
+      "id": "challenger-ikebana",
+      "kind": "challenger",
+      "catalogId": "growth-metamorphosis-branching-ikebana-ma-arrangement",
+      "label": "Ikebana",
+      "verdict": "declined",
+      "lineage": "arranjo no tokonoma",
+      "thesis": "Poucos elementos em assimetria, com o vazio ativo.",
+      "palette": ["#e7e2d6", "#6b5a48", "#3d5bab", "#4a3b2a"],
+      "materials": ["reboco", "pinho", "bronze"],
+      "viewport": "Um galho sobe pelo vazio da tela.",
+      "case": "É contemplativo demais para quem precisa entender em segundos.",
+      "kept": "O vazio como parte ativa da composição.",
+      "risk": "Pode ficar vazio de verdade.",
+      "hero": "https://impeccable.style/worlds/cards/growth-metamorphosis-branching-ikebana-ma-arrangement-hero.webp"
+    },
+    {
+      "id": "challenger-oscilloscope",
+      "kind": "challenger",
+      "catalogId": "scientific-notation-oscilloscope-signal-bench",
+      "label": "Osciloscópio",
+      "verdict": "declined",
+      "lineage": "bancada de sinais",
+      "thesis": "Projetos como sinais medidos numa graticula.",
+      "palette": ["#0a0d0a", "#39ff6a", "#5b625b", "#ffb000"],
+      "materials": ["vidro de fósforo", "graticula gravada"],
+      "viewport": "Um traço verde pulsando sobre a grade.",
+      "case": "Verde neon sobre preto é o rut de portfólio tech, e osciloscópio não é ferramenta da sua área.",
+      "kept": "Uma unidade de medida única para tudo.",
+      "risk": "É cosplay de instrumento.",
+      "hero": "https://impeccable.style/worlds/cards/scientific-notation-oscilloscope-signal-bench-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "O padrão de portfólio de dev",
+    "thesis": "O que a categoria entrega, executado com perfeição.",
+    "palette": ["#fafafa", "#111111", "#2b5cff"],
+    "materials": ["grid limpo", "screenshots dos projetos"],
+    "viewport": "Nome e título grandes, depois uma lista de projetos com imagem, depois experiência e contato.",
+    "risk": "Fica indistinguível de qualquer outro portfólio, por definição."
+  },
+  "steer": true
+}

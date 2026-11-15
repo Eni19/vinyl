@@ -1,21 +1,97 @@
 {
   "meta": {
-    "description": "Portfólio e currículo de {name}"
+    "description": "Portfólio de {name}: machine learning, pesquisa e produto."
   },
   "nav": {
-    "switchLanguage": "English",
-    "switchLanguageLabel": "Ver o site em inglês"
-  },
-  "home": {
+    "label": "Seções",
     "projects": "Projetos",
-    "skills": "Competências",
+    "research": "Pesquisa",
     "experience": "Experiência",
-    "ongoing": "atual"
+    "contact": "Contato",
+    "switchLanguage": "EN",
+    "switchLanguageLabel": "Ver o site em inglês",
+    "cta": "Fale comigo",
+    "skip": "Pular para o conteúdo"
+  },
+  "hero": {
+    "lede": "Transformo pesquisa em machine learning em coisas que as pessoas entendem e usam."
+  },
+  "projects": {
+    "kind": {
+      "personal": "Projeto pessoal",
+      "academic": "Projeto acadêmico",
+      "research": "Pesquisa",
+      "professional": "Projeto profissional"
+    }
+  },
+  "research": {
+    "published": "Publicado no {venue}.",
+    "read": "Ler o artigo"
+  },
+  "experience": {
+    "education": "Formação",
+    "courses": "Cursos",
+    "languages": "Idiomas",
+    "ongoing": "atual",
+    "inProgress": "em andamento",
+    "levels": {
+      "native": "nativo",
+      "fluent": "fluente",
+      "advanced": "avançado",
+      "intermediate": "intermediário",
+      "basic": "básico"
+    }
+  },
+  "contact": {
+    "lede": "Quer falar sobre uma vaga, um projeto ou uma pesquisa? Escreva para mim."
   },
   "links": {
-    "live": "Ver o site",
+    "live": "Abrir o site",
     "code": "Ver o código",
     "paper": "Ler o artigo",
     "other": "Abrir"
+  },
+  "project": {
+    "highlights": "O que foi feito",
+    "skills": "Competências usadas",
+    "next": "Próximo projeto",
+    "paper": "Artigo relacionado"
+  },
+  "records": {
+    "shelf": "Discos na estante",
+    "sideA": "Lado A",
+    "sideB": "Lado B",
+    "back": "Devolver à estante",
+    "next": "Próximo disco",
+    "previous": "Disco anterior",
+    "hint": "Passe o mouse para puxar um disco; clique para tocar.",
+    "hintTouch": "Toque num disco para colocá-lo no toca-discos.",
+    "credits": "Ficha técnica",
+    "fullStory": "Ver o projeto completo",
+    "offRecord": "Fora do código, desenho e toco guitarra. Algumas capas desta estante são desenhos meus.",
+    "themes": {
+      "research": {
+        "title": "Pesquisa",
+        "subtitle": "Artigos e iniciação científica"
+      },
+      "experience": {
+        "title": "Experiência",
+        "subtitle": "Trabalho, extensão e formação"
+      },
+      "skills": {
+        "title": "Competências",
+        "subtitle": "Ferramentas e áreas"
+      },
+      "contact": {
+        "title": "Contato",
+        "subtitle": "Vamos conversar"
+      }
+    }
+  },
+  "credits": {
+    "models": "Modelos 3D (CC BY 4.0):",
+    "crate": "caixote",
+    "deck": "toca-discos",
+    "by": "de"
   }
 }

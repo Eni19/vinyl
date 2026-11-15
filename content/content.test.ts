@@ -3,6 +3,7 @@ import { PortfolioSchema } from "@/domain/entities/portfolio";
 import { missingLocales } from "@/domain/i18n/localized";
 import { buildResume } from "@/domain/resume/build-resume";
 import { defaultSelection } from "@/domain/resume/selection";
+import { THEME_IDS, buildCatalog } from "@/ui/records/catalog";
 import { portfolioSources } from "./index";
 
 // Guards the real content: a typo in a JSON file fails CI instead of the site.
@@ -25,6 +26,24 @@ describe.each(Object.entries(portfolioSources))("content/%s", (slug, source) => 
     };
     walk(source, slug);
     expect(untranslated).toEqual([]);
+  });
+
+  it("presses a full record collection in every locale", () => {
+    const labels = {
+      themes: Object.fromEntries(THEME_IDS.map((id) => [id, { title: id, subtitle: id }])) as never,
+      kinds: { personal: "p", academic: "a", research: "r", professional: "w" },
+    };
+    for (const locale of ["pt", "en"] as const) {
+      const records = buildCatalog(parsed.data!, locale, labels);
+      expect(new Set(records.map((r) => r.id)).size).toBe(records.length);
+      for (const record of records) {
+        expect(record.tracks.length, `${record.id} has no tracks`).toBeGreaterThan(0);
+      }
+      // Every theme record is dressed in one of the owner's drawings.
+      for (const theme of records.filter((r) => r.kind === "theme")) {
+        expect(theme.art?.src, `${theme.id} has no artwork`).toMatch(/^\/art\//);
+      }
+    }
   });
 
   it("builds a resume in every locale", () => {

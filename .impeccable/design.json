@@ -1,0 +1,20 @@
+{
+  "source": "src/app/globals.css",
+  "motion": {
+    "easeOut": "cubic-bezier(0.23, 1, 0.32, 1)",
+    "easeInOut": "cubic-bezier(0.77, 0, 0.175, 1)",
+    "press": "transform: scale(0.97) over 160ms ease-out",
+    "entrance": "rise: from opacity 0.35, translateY(32px), blur(5px); scroll-driven (animation-timeline: view()), staggered by data-reveal 1-3",
+    "vine": "clip-path inset reveal from the right, scroll-driven",
+    "guitar": "rise 1.8s ease-out-expo, damped pointer follow (k = 1 - e^(-3dt)), 0.6 rad/s sway of 0.025 rad",
+    "reducedMotion": "no travel; guitar renders settled and still; entrances disabled"
+  },
+  "focus": "outline: 3px solid ballpoint-blue, offset 3px; seafoam on the pickguard field; night-ink on the ink field",
+  "selection": "ballpoint-blue background with white text; seafoam on the pickguard field",
+  "hoverGate": "@media (hover: hover) and (pointer: fine)",
+  "assets": {
+    "art": "public/art/ (owner's drawings, telecaster photo, flores.png linework mask)",
+    "projects": "public/projects/ (screenshots of the owner's live sites)",
+    "references": "design/references/ (unedited photos of the room and drawings)"
+  }
+}

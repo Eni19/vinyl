@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LOCALES } from "../i18n/locale";
 import { LocalizedStringSchema } from "../i18n/localized";
 import { IdSchema, LinkSchema, PeriodSchema, YearMonthSchema } from "./common";
 
@@ -16,6 +17,8 @@ export const ProfileSchema = z
   .object({
     slug: IdSchema,
     name: z.string().min(1),
+    /** How the site greets visitors, when it differs from the full name on resumes. */
+    shortName: z.string().min(1).optional(),
     headline: LocalizedStringSchema,
     summary: z.array(LocalizedStringSchema).min(1),
     location: LocalizedStringSchema.optional(),
@@ -40,6 +43,27 @@ export const SkillSchema = z
   })
   .strict();
 
+export const MediaSchema = z
+  .object({
+    /** Path under /public, e.g. "/projects/amr-pt.png". */
+    src: z.string().regex(/^\/[\w./-]+$/, "use an absolute public path"),
+    alt: LocalizedStringSchema,
+    caption: LocalizedStringSchema.optional(),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+    /** Set when the picture only makes sense in one language (a screenshot of a translated site). */
+    locale: z.enum(LOCALES).optional(),
+  })
+  .strict();
+
+export const ComparisonSchema = z
+  .object({
+    metric: LocalizedStringSchema,
+    baseline: z.object({ name: z.string().min(1), value: z.number() }).strict(),
+    result: z.object({ name: z.string().min(1), value: z.number() }).strict(),
+  })
+  .strict();
+
 export const ProjectSchema = z
   .object({
     id: IdSchema,
@@ -51,6 +75,7 @@ export const ProjectSchema = z
     links: z.array(LinkSchema).default([]),
     period: PeriodSchema.optional(),
     featured: z.boolean().default(false),
+    media: z.array(MediaSchema).default([]),
   })
   .strict();
 
@@ -64,6 +89,8 @@ export const ExperienceSchema = z
     period: PeriodSchema,
     highlights: z.array(LocalizedStringSchema),
     skillIds: z.array(IdSchema).default([]),
+    /** Gets its own spotlight on the site, beyond the timeline entry. */
+    featured: z.boolean().default(false),
   })
   .strict();
 
@@ -77,6 +104,8 @@ export const PublicationSchema = z
     highlights: z.array(LocalizedStringSchema).default([]),
     skillIds: z.array(IdSchema).default([]),
     projectId: IdSchema.optional(),
+    /** Measured results against a baseline, e.g. a new model vs the reference one. */
+    comparisons: z.array(ComparisonSchema).default([]),
   })
   .strict();
 
@@ -119,6 +148,17 @@ function findDuplicateIds(items: { id: string }[]): string[] {
   return [...duplicates];
 }
 
+/** Work made outside the job: drawings, music, anything that shows who the person is. */
+export const ArtworkSchema = z
+  .object({
+    id: IdSchema,
+    title: LocalizedStringSchema,
+    /** "Ballpoint on paper", "Coloured pencil and ink"… */
+    medium: LocalizedStringSchema,
+    media: MediaSchema,
+  })
+  .strict();
+
 export const PortfolioSchema = z
   .object({
     schemaVersion: z.literal(1),
@@ -131,6 +171,7 @@ export const PortfolioSchema = z
     education: z.array(EducationSchema).default([]),
     courses: z.array(CourseSchema).default([]),
     languages: z.array(SpokenLanguageSchema).default([]),
+    gallery: z.array(ArtworkSchema).default([]),
   })
   .strict()
   .superRefine((portfolio, ctx) => {
@@ -143,6 +184,7 @@ export const PortfolioSchema = z
       "publications",
       "education",
       "courses",
+      "gallery",
     ] as const;
 
     for (const key of collections) {
@@ -192,3 +234,11 @@ export type Publication = Portfolio["publications"][number];
 export type Education = Portfolio["education"][number];
 export type Course = Portfolio["courses"][number];
 export type SpokenLanguage = Portfolio["languages"][number];
+export type Media = Project["media"][number];
+export type Artwork = Portfolio["gallery"][number];
+export type Comparison = Publication["comparisons"][number];
+
+/** Pictures that fit a locale: language-neutral ones plus those made for it. */
+export function mediaForLocale(media: Media[], locale: (typeof LOCALES)[number]): Media[] {
+  return media.filter((m) => !m.locale || m.locale === locale);
+}
