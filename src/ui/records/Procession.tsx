@@ -37,10 +37,12 @@ export interface ProcessionProps {
   /** The record currently pulled up in the crate, if any. */
   browsed: string | null;
   hidden: boolean;
-  labels: { shelf: string; play: string; hint: string };
+  labels: { shelf: string; play: string; hint: string; previous: string; next: string };
   onBrowse: (id: string) => void;
   onLeave: () => void;
   onMove: (delta: number) => void;
+  /** Turn straight to the record at this index. */
+  onGo: (index: number) => void;
   onPlay: (id: string) => void;
 }
 
@@ -59,6 +61,7 @@ export function Procession({
   onBrowse,
   onLeave,
   onMove,
+  onGo,
   onPlay,
 }: ProcessionProps) {
   const urls = useCoverUrls(records);
@@ -88,6 +91,35 @@ export function Procession({
         setTimeout(() => (drag.current = null), 0);
       }}
     >
+      {/* The way through: up, one tick per record (the centre one lit), down. It says
+          there are more records than the three in view, and where you are among them. */}
+      <div className="procession-rail">
+        <button type="button" className="procession-step" onClick={() => onMove(-1)} aria-label={labels.previous}>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+            <path d="M3 10l5-5 5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+          </svg>
+        </button>
+        <ol className="procession-ticks">
+          {records.map((record, i) => (
+            <li key={record.id}>
+              <button
+                type="button"
+                className="procession-tick"
+                aria-current={i === center || undefined}
+                aria-label={`${record.catalog} ${record.title}`}
+                tabIndex={-1}
+                onClick={() => onGo(i)}
+              />
+            </li>
+          ))}
+        </ol>
+        <button type="button" className="procession-step" onClick={() => onMove(1)} aria-label={labels.next}>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+            <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+          </svg>
+        </button>
+      </div>
+
       <ul className="procession-track">
         {records.map((record, i) => {
           const offset = ringOffset(i, center, count);

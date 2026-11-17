@@ -5,7 +5,7 @@ import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, use
 import * as THREE from "three";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
+import { Bloom, EffectComposer, Outline, Select, Selection, Vignette } from "@react-three/postprocessing";
 import { SLEEVES, type RecordSpec } from "./catalog";
 import { backTexture, coverTexture, labelTexture, woodTexture } from "./textures";
 
@@ -186,6 +186,9 @@ function Disc({
   );
 }
 
+/** Raycasting off: a hit area that ignores the pointer. */
+const NO_RAYCAST = () => null;
+
 /** A record's resting place: low in the crate, leaning back, one behind the other. */
 function restPose(slot: number) {
   // All sleeves stand on the crate floor; the ones further back lean a little more
@@ -207,6 +210,7 @@ function Record({
   font,
   playing,
   withDisc,
+  interactive,
   hovered,
   side,
   labels,
@@ -222,6 +226,8 @@ function Record({
   playing: boolean;
   /** Whether its vinyl (and back cover) exist: from the moment it plays until it is home. */
   withDisc: boolean;
+  /** Pointing at it browses it: only once the crate has been clicked open. */
+  interactive: boolean;
   hovered: boolean;
   side: "a" | "b";
   labels: SceneLabels;
@@ -404,6 +410,7 @@ function Record({
         position={[rest.position.x, rest.position.y + 0.08 + (hovered ? 0.17 : 0), rest.position.z]}
         // Invisible: three.js still raycasts it, but it costs no draw call.
         visible={false}
+        raycast={interactive ? THREE.Mesh.prototype.raycast : NO_RAYCAST}
         quaternion={rest.quaternion}
         scale={[1, hovered ? (SLEEVE.h + 0.5) / (SLEEVE.h + 0.16) : 1, 1]}
         onPointerOver={(e) => {
@@ -494,7 +501,17 @@ function shadowed(root: THREE.Object3D) {
 }
 
 /** The scanned crate, scaled to hold our sleeves, standing on the table. */
-function Crate() {
+/**
+ * The scanned crate. Closed, pointing at it outlines it and a click opens it; open,
+ * pointing at its records pulls them up (see Record). Escape or a click elsewhere closes it.
+ */
+function Crate({ open, onOpen }: { open: boolean; onOpen: () => void }) {
+  const [hover, setHover] = useState(false);
+  // The outline changes with no prop on a three object changing, so ask for a frame.
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    invalidate();
+  }, [hover, open, invalidate]);
   const gltf = useLoader(GLTFLoader, "/models/crate.glb", withMeshopt);
   const placed = useMemo(() => {
     const scene = gltf.scene.clone(true);
@@ -518,7 +535,32 @@ function Crate() {
   }, [placed]);
   return (
     <group position={CRATE_PIVOT} quaternion={CRATE_Q}>
-      <primitive object={placed.scene} position={placed.position.clone().sub(CRATE_PIVOT)} scale={placed.scale} />
+      <Select enabled={open || hover}>
+        <primitive object={placed.scene} position={placed.position.clone().sub(CRATE_PIVOT)} scale={placed.scale} />
+      </Select>
+      {/* The crate's volume, records included, as one invisible target. */}
+      <mesh
+        visible={false}
+        position={[0, 0.62, 0]}
+        onPointerOver={() => {
+          if (open) return;
+          setHover(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHover(false);
+          if (!open) document.body.style.cursor = "";
+        }}
+        onClick={(e) => {
+          if (open || e.delta > 8) return;
+          e.stopPropagation();
+          setHover(false);
+          onOpen();
+        }}
+      >
+        <boxGeometry args={[CRATE.width + 0.08, 1.3, placed.front * 2 + 0.08]} />
+        <meshBasicMaterial />
+      </mesh>
     </group>
   );
 }
@@ -784,7 +826,8 @@ function CameraRig({
       pos.set(cx + dx, Math.max(2.1 + dy, 1.9), z * 0.9);
     } else {
       const z = wide ? Math.max(4.9 / (2 * tan * aspect), 2.3 / (2 * tan)) : 3.3 / (2 * tan * aspect);
-      const shift = wide ? -0.8 : 0.05;
+      // Pushed right a little: the left column holds the intro and the record procession.
+      const shift = wide ? -0.92 : 0.05;
       // From above, so the eye looks down into the crate across the sleeves' top edges.
       target.set(shift, wide ? 0.4 : 1.2, 0);
       pos.set(shift, wide ? 3.3 : 3.8, z * 0.94);
@@ -828,8 +871,20 @@ function Scene({
   onBrowse,
   onSelect,
   font,
-}: SceneProps & { font: string }) {
+  crateOpen,
+  onCrateOpen,
+}: SceneProps & { font: string; crateOpen: boolean; onCrateOpen: (open: boolean) => void }) {
   const [modelsReady, setModelsReady] = useState(false);
+  // The crate is browsable by pointer only while open, and never while a record plays.
+  const open = crateOpen && selected === null;
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCrateOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onCrateOpen]);
   const invalidate = useThree((state) => state.invalidate);
   // Records whose vinyl is out: the playing one plus any still on their way home.
   // (Adjusted while rendering, React's pattern for state derived from a changing prop.)
@@ -846,14 +901,14 @@ function Scene({
   );
   useEffect(() => {
     invalidate();
-  }, [invalidate, selected, browsed, side, panel, modelsReady]);
+  }, [invalidate, selected, browsed, side, panel, modelsReady, open]);
   return (
-    <>
+    <Selection>
       <fog attach="fog" args={[BG, 4.5, 11]} />
       <Room />
       <Lights playing={selected !== null} />
       <Suspense fallback={null}>
-        <Crate />
+        <Crate open={open} onOpen={() => onCrateOpen(true)} />
         <Deck playing={selected !== null} reducedMotion={reducedMotion} />
         <Ready onReady={() => setModelsReady(true)} />
       </Suspense>
@@ -867,27 +922,40 @@ function Scene({
             font={font}
             playing={selected === record.id}
             withDisc={out.includes(record.id)}
+            interactive={open}
             hovered={browsed === record.id && !selected}
             side={side}
             labels={labels}
             reducedMotion={reducedMotion}
             onHover={onBrowse}
-            onSelect={onSelect}
+            onSelect={(id) => {
+              onCrateOpen(false);
+              onSelect(id);
+            }}
             onSettled={settle}
           />
         ))}
       <CameraRig selected={selected} panel={panel} reducedMotion={reducedMotion} />
-      <EffectComposer multisampling={4}>
+      <EffectComposer multisampling={4} autoClear={false}>
+        {/* The crate's outline: soft ink while pointed at, lime once open. */}
+        <Outline
+          visibleEdgeColor={open ? 0xe1ef4a : 0xf1ede4}
+          hiddenEdgeColor={0x000000}
+          edgeStrength={open ? 6 : 4}
+          blur
+          xRay={false}
+        />
         <Bloom intensity={0.55} luminanceThreshold={0.95} luminanceSmoothing={0.2} mipmapBlur />
         <Vignette offset={0.32} darkness={0.72} />
       </EffectComposer>
-    </>
+    </Selection>
   );
 }
 
 export default function ShelfScene(props: SceneProps & { running: boolean; onReady: () => void }) {
   const { running, onReady, ...scene } = props;
   const [font, setFont] = useState<string | null>(null);
+  const [crateOpen, setCrateOpen] = useState(false);
   useEffect(() => {
     document.fonts.ready.then(() => setFont(getComputedStyle(document.body).fontFamily));
   }, []);
@@ -902,10 +970,11 @@ export default function ShelfScene(props: SceneProps & { running: boolean; onRea
       camera={{ position: [0, 1.8, 6], fov: 32, near: 0.05, far: 40 }}
       gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
       onCreated={() => onReady()}
+      onPointerMissed={() => setCrateOpen(false)}
       aria-hidden
     >
       <color attach="background" args={[BG]} />
-      {font && <Scene {...scene} font={font} />}
+      {font && <Scene {...scene} font={font} crateOpen={crateOpen} onCrateOpen={setCrateOpen} />}
     </Canvas>
   );
 }

@@ -215,10 +215,20 @@ export function Shelf({ records, intro, credits, notes, labels, switcher }: Shel
               center={center}
               browsed={browsed}
               hidden={selected !== null}
-              labels={{ shelf: labels.shelf, play: labels.play, hint: labels.explore }}
+              labels={{
+                shelf: labels.shelf,
+                play: labels.play,
+                hint: labels.explore,
+                previous: labels.previous,
+                next: labels.next,
+              }}
               onBrowse={setBrowsed}
               onLeave={() => setBrowsed((b) => (b === null ? null : ids[center]))}
               onMove={move}
+              onGo={(i) => {
+                setCenter(i);
+                setBrowsed(ids[i]);
+              }}
               onPlay={(id) => play(id)}
             />
           )}

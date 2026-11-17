@@ -66,7 +66,7 @@
     "previous": "Previous record",
     "hint": "Hover or scroll over the crate to flip through it; click a record to play it.",
     "play": "Play",
-    "explore": "Scroll or drag to explore · click a record to play",
+    "explore": "Scroll, drag or use ↑ ↓ to see them all · click a record to play",
     "hintTouch": "Tap a record to put it on the turntable.",
     "credits": "Credits",
     "fullStory": "See the full project",
