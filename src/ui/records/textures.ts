@@ -79,13 +79,13 @@ export async function coverTexture(record: RecordSpec, font: string): Promise<TH
   // the catalogue number sit right at the top edge.
   const pad = 64;
   ctx.fillStyle = colors.ink;
-  const band = fit(ctx, record.title, FACE - pad * 2 - 150, 1, 66, "800", font);
+  const band = fit(ctx, record.title, FACE - pad * 2 - 150, 1, 54, "800", font);
   ctx.font = `800 ${band.size}px ${font}`;
   ctx.textBaseline = "top";
-  ctx.fillText(band.lines[0] ?? "", 34, 16);
+  ctx.fillText(band.lines[0] ?? "", 34, 10);
   ctx.font = `700 34px ${font}`;
   ctx.textAlign = "right";
-  ctx.fillText(record.catalog, FACE - 34, 26);
+  ctx.fillText(record.catalog, FACE - 34, 18);
   ctx.textAlign = "left";
   // Below the strip: the title at full size, then the artwork.
   const title = fit(ctx, record.title, FACE - pad * 2, record.art ? 2 : 4, record.art ? 96 : 150, "800", font);

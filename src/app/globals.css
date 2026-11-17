@@ -276,7 +276,7 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
 }
 
 .shelf-hint {
-  margin-top: 22px;
+  margin-top: 14px;
   font-size: var(--text-small);
   color: var(--ink-soft);
 }
@@ -335,6 +335,7 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
   font-stretch: 85%;
 }
 
+/* On the live shelf the crate links stay for keyboards and screen readers and show when focused. */
 .shelf[data-live] .crate {
   position: absolute;
   z-index: 20;
@@ -370,6 +371,86 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
 
 .shelf[data-live] .crate-title {
   font-size: 1rem;
+}
+
+/* The browse control, kept under the crate's front edge by the scene. */
+.crate-browser {
+  --x: 50vw;
+  --y: 70vh;
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  transform: translate(calc(var(--x) - 50%), calc(var(--y) + 22px));
+}
+
+.crate-browser-step,
+.crate-browser-play {
+  min-height: 44px;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out);
+}
+
+.crate-browser-step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  background: var(--paper-line);
+  color: var(--ink);
+}
+
+.crate-browser-play {
+  padding: 0 20px;
+  background: var(--lime);
+  color: var(--room);
+}
+
+.crate-browser-play:disabled {
+  background: var(--paper-line);
+  color: var(--ink-soft);
+  cursor: default;
+}
+
+.crate-browser-step:active,
+.crate-browser-play:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.crate-browser-now {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  padding: 0 14px;
+  background: var(--paper);
+  white-space: nowrap;
+}
+
+.crate-browser-swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.crate-browser-catalog {
+  flex: none;
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.crate-browser-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+  font-stretch: 90%;
 }
 
 /* Flat page (no WebGL or no script): intro, the crate, then the notes. */

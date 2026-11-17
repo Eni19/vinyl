@@ -45,6 +45,8 @@ export interface ShelfProps {
     previous: string;
     hint: string;
     hintTouch: string;
+    play: string;
+    browse: string;
   };
   switcher: ReactNode;
 }
@@ -60,7 +62,11 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
   const [running, setRunning] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
   const [side, setSide] = useState<"a" | "b">("a");
+  /** The record pulled up in the crate: what Enter plays. */
+  const [browsed, setBrowsed] = useState<string | null>(null);
   const root = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const anchor = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
   const reducedMotion = useMedia("(prefers-reduced-motion: reduce)", false);
@@ -113,11 +119,58 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
   }, [selected, live, play]);
 
   const index = selected ? ids.indexOf(selected) : -1;
+  const current = records.find((r) => r.id === browsed) ?? null;
   const step = (delta: number) => play(ids[(index + delta + ids.length) % ids.length]);
+
+  // Flip through the crate one record at a time: wheel over the scene, or the arrow keys.
+  const flip = useCallback(
+    (delta: number) =>
+      setBrowsed((current) => {
+        const at = current ? ids.indexOf(current) : -1;
+        const next = at < 0 ? (delta > 0 ? 0 : ids.length - 1) : Math.min(ids.length - 1, Math.max(0, at + delta));
+        return ids[next];
+      }),
+    // ids is derived from records on every render; records is the real dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [records],
+  );
+
+  useEffect(() => {
+    const el = stage.current;
+    if (!live || selected || !el) return;
+    let pending = 0;
+    let last = 0;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      pending += e.deltaY;
+      const now = performance.now();
+      // One record per notch, and not faster than the eye can follow on a trackpad.
+      if (Math.abs(pending) < 40 || now - last < 110) return;
+      flip(pending > 0 ? 1 : -1);
+      pending = 0;
+      last = now;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("input, textarea, [role=tablist]")) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") flip(1);
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") flip(-1);
+      // On a link or button, Enter already does that element's job.
+      else if (e.key === "Enter" && browsed && !target.closest("a, button")) play(browsed);
+      else return;
+      e.preventDefault();
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [live, selected, browsed, flip, play]);
 
   return (
     <div ref={root} className="shelf" data-live={live || undefined} data-open={selected ?? undefined}>
-      <div className="shelf-stage">
+      <div ref={stage} className="shelf-stage">
         {webgl && (
           <ShelfScene
             records={records}
@@ -127,6 +180,9 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
             labels={{ sideA: labels.sideA, sideB: labels.sideB }}
             panel={wide ? { side: "right", share: 0.44 } : { side: "bottom", share: 0.6 }}
             running={running}
+            browsed={browsed}
+            onBrowse={setBrowsed}
+            anchor={anchor}
             onSelect={(id) => play(id === selected ? null : id)}
             onReady={() => setReady(true)}
           />
@@ -142,6 +198,46 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
           )}
         </div>
 
+        {/* Under the crate: the record you are looking at, a step either way, and Play.
+            The scene moves it so it stays under the crate whatever the screen size. */}
+        {live && wide && !selected && (
+          <div ref={anchor} className="crate-browser">
+            <button type="button" className="crate-browser-step" onClick={() => flip(-1)} aria-label={labels.previous}>
+              <svg className="chevron" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+              </svg>
+            </button>
+            <p className="crate-browser-now" aria-live="polite">
+              {current ? (
+                <>
+                  <span
+                    className="crate-browser-swatch"
+                    style={{ background: SLEEVES[current.sleeve].sleeve }}
+                    aria-hidden
+                  />
+                  <span className="crate-browser-catalog">{current.catalog}</span>
+                  <span className="crate-browser-title">{current.title}</span>
+                </>
+              ) : (
+                <span className="crate-browser-title">{labels.browse}</span>
+              )}
+            </p>
+            <button type="button" className="crate-browser-step" onClick={() => flip(1)} aria-label={labels.next}>
+              <svg className="chevron" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="crate-browser-play"
+              onClick={() => current && play(current.id)}
+              disabled={!current}
+            >
+              {labels.play}
+            </button>
+          </div>
+        )}
+
         {/* Every record is also a plain link: keyboard, screen readers and no-WebGL visitors use these. */}
         <nav className="crate" aria-label={labels.shelf}>
           <ul>
@@ -154,6 +250,7 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
                     className="crate-sleeve"
                     style={{ "--sleeve": colors.sleeve, "--sleeve-ink": colors.ink } as React.CSSProperties}
                     aria-current={selected === record.id ? "true" : undefined}
+                    onFocus={() => live && setBrowsed(record.id)}
                     onClick={(e) => {
                       if (!live) return;
                       e.preventDefault();

@@ -9,3 +9,7 @@ Model License:
 
 If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
 This work is based on "Vinyl Recorder with "Until i Found You" disc" (https://sketchfab.com/3d-models/vinyl-recorder-with-until-i-found-you-disc-2c6d0ebeea5c4aeaa0353e23d53f3869) by ImSiyue (https://sketchfab.com/siyue_cherry) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Changes made for this site:
+* Compressed (meshopt) and textures resized.
+* The model's own record is hidden at runtime and its mesh reused for the site's records; the black platter disc is recoloured as a felt mat.

@@ -73,7 +73,7 @@ The room is almost black. Colour lives on the sleeves and in the light.
 **Key characteristics:**
 
 - One 3D scene (React Three Fiber) with two real CC BY 4.0 models: a scanned record crate (Ellipsoid) and a turntable (ImSiyue). Credits sit under the intro.
-- Sleeves are 1 × 1 squares with a printed cover (title strip at the top so it reads in the crate, then title, artwork, subtitle and catalogue number ES-00n) and a track-list back. Discs have a grooved black face and a paper label in the sleeve's label colour.
+- Sleeves are 1 × 1 squares with a printed cover (title strip at the top so it reads in the crate, then title, artwork, subtitle and catalogue number ES-00n) and a track-list back. The vinyl is the turntable model's own record (its grooved mesh and material, converted from quantized to float geometry before scaling), with our paper label over its label on both faces at 44% of the radius. The turntable starts empty.
 - Content always also exists as HTML: liner notes, project pages and a flat no-WebGL mode that shows both sides.
 
 ## Colors
@@ -115,7 +115,9 @@ Seven sleeve colourways (ink, seafoam, orange, lilac, lime, paper, graphite), ea
 
 ## Layout
 
-- **Overview (desktop):** intro top-left, crate centred-right, deck at the right. The camera pulls back to fit both and follows the pointer slightly.
+- **In the crate:** the scan's block of LPs is cut out of the mesh offline (triangles right of the Ellington sleeve, inside the walls and above the floor), so the crate holds only our sleeves plus the scanned "Mood Ellington" sleeve leaning against the left wall. Our sleeves stand toward the front and a little right of centre.
+- **Turntable:** starts empty. The model's black platter disc is recoloured as a dark felt mat, so the empty platter doesn't read as a hole.
+- **Overview (desktop):** intro top-left, crate centred-right and turned toward the deck, deck at the right. The camera looks down from above, so the sleeves (standing low in the crate, each a little further back and higher) show their title strips like a crate you flip through. It follows the pointer slightly.
 - **Playing:** the liner notes take 44vw on the right. The camera frames the crate (with the played sleeve standing tall in it) and the spinning deck in the free part.
 - **Phones:** the intro sits on top and the scene below. A row of sleeve links at the bottom acts as the crate's accessible menu. The liner notes become a 60svh bottom sheet, and the camera frames the scene above it.
 - **Flat (no WebGL or no script):** intro, then every record's liner notes with both sides.
@@ -126,12 +128,22 @@ Depth is physical and only in the 3D scene: a shadow-casting lamp, a rim light, 
 
 ## Motion
 
-- Hover: the record rises about a third of its height out of the crate (static hit boxes at rest, so the pointer never loses it).
-- Play, in phases: lift (0–0.6s), disc slides out (0.55–1.15s), disc arcs to the platter and lays flat (1.15–2.2s; flipped for Side B), sleeve settles back into the crate standing tall (1.3–2.1s), spin at 3.5 rad/s, tone arm swings in.
+- Browse: one record at a time slides up about a third of its height along its own lean (so the records in front still hide its lower half). It is chosen by pointing at it in the crate, by the wheel over the scene, by the arrow keys, or by the arrows of the crate control, and stays up until another is chosen. Enter or the control's Play button plays it. Hit areas stay at the rest pose, and the browsed record's grows over its raised cover, so a click lands on the record you see.
+- Play, in phases: the sleeve lifts with the vinyl hidden just behind its back (0–0.6s); the vinyl slides out of the sleeve's open side, in the sleeve's plane (0.6–1.25s); it arcs to the platter and lays flat (1.25–2.3s, flipped for Side B); the sleeve settles back into the crate standing tall (1.4–2.2s); then the record spins at 3.5 rad/s and the tone arm swings in.
+- Return (Esc, back, or another record): the sleeve rises from its "now playing" spot; the vinyl arcs off the platter to the sleeve's open side (0–0.85s) and slides back in behind the cover (0.85–1.4s); the sleeve moves over its slot and drops straight down into it (1.35–2.3s).
 - `prefers-reduced-motion`: poses jump, the camera cuts, nothing drifts.
+
+## Performance
+
+- The canvas renders on demand. Every animation asks for the next frame only while it is still easing, so an idle page draws nothing. Pointer moves wake the loop for the parallax, and a playing record keeps it running because it spins. Frame deltas are clamped, so nothing jumps when the loop wakes.
+- Pixel ratio is capped at 1.5, and the lamp's shadow map is 1024².
+- Sleeves share one geometry with three draw groups (edges, cover, back) instead of six faces. Hit areas are invisible meshes: they still raycast but cost no draw call.
+- A record's vinyl, its two labels and its back cover exist only from the moment it is played until it is back in its slot. A fresh page draws 9 cover canvases instead of 36 canvases.
+- The crate scan stays at full detail (about 154k triangles). Aggressive simplification broke its texture along UV seams, and gentle simplification barely reduced it.
 
 ## Components
 
+- **Crate control (desktop):** kept just under the crate's front edge by the scene (projected every frame): a previous arrow, the browsed record (sleeve-colour square, catalogue number, title, or "Flip through the crate" before any is chosen), a next arrow, and a lime Play button. Hidden while a record plays. On phones the bottom row of sleeves does this job; the crate links stay in the page for keyboards and screen readers.
 - **Liner notes:** bar (back to the crate, previous/next), catalogue number, title (focused on open), subtitle, Lado A / Lado B tabs (`role="tablist"`), then the side's content. Tracks are numbered A1, A2… on alternating rows. Esc closes, and the URL hash follows the playing record.
 - **Primary button:** lime fill, dark label, square.
 - **Text link:** bold, orange underline, with an arrow nudge on hover.

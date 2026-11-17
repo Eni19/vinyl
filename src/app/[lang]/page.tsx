@@ -48,6 +48,8 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             previous: r.previous,
             hint: r.hint,
             hintTouch: r.hintTouch,
+            play: r.play,
+            browse: r.browse,
           }}
         />
       </main>
