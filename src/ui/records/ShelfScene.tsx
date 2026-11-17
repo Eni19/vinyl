@@ -31,7 +31,21 @@ const stage = {
   crateFront: 0.4,
   crateTop: 0.45,
   platter: new THREE.Vector3(DECK.x, 0.3, DECK.z),
+  /** The turntable's bounds in the scene, for the overhead "now playing" view. */
+  deck: new THREE.Box3(
+    new THREE.Vector3(DECK.x - 0.7, 0, DECK.z - 0.5),
+    new THREE.Vector3(DECK.x + 0.7, 0.3, DECK.z + 0.5),
+  ),
 };
+
+/**
+ * Turntable speed, rad/s. Slower than a real 33⅓ rpm (3.5 rad/s): about 16 rpm,
+ * so it still reads as turning but the label stays readable.
+ */
+const SPIN = 1.7;
+
+/** When the vinyl has landed and spins (the play timeline's last phase ends at 2.3s). */
+const SPINNING_AFTER = 2.5;
 
 const FLAT = new THREE.Quaternion();
 const FLIPPED = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI, 0, 0));
@@ -251,6 +265,9 @@ function Record({
     const discInLiftedQ = liftedQ.clone().multiply(UPRIGHT);
     // On the way back the sleeve comes down straight into its own slot.
     const aboveRest = rest.position.clone().add(new THREE.Vector3(0, 0.78, 0));
+    // Pulled up for a look: slid up along its own lean, within its slot (lifting straight up
+    // would tip a leaning sleeve forward through the records in front of it).
+    const browsePos = rest.position.clone().add(new THREE.Vector3(0, 0.36, 0).applyQuaternion(rest.quaternion));
     return {
       restQ,
       liftedPos,
@@ -261,6 +278,7 @@ function Record({
       outPos,
       discInLiftedQ,
       aboveRest,
+      browsePos,
     };
   }, [rest]);
   const scratch = useMemo(() => ({ v: new THREE.Vector3(), q: new THREE.Quaternion() }), []);
@@ -294,7 +312,9 @@ function Record({
       s.position.lerpVectors(poses.displayPos, poses.liftedPos, r1);
       s.quaternion.slerpQuaternions(poses.displayQ, poses.liftedQ, r1);
       if (r4 > 0) {
-        s.position.lerpVectors(poses.liftedPos, poses.aboveRest, r4).lerp(rest.position, r5);
+        s.position
+          .lerpVectors(poses.liftedPos, poses.aboveRest, r4)
+          .lerp(hovered ? poses.browsePos : rest.position, r5);
         s.quaternion.slerpQuaternions(poses.liftedQ, poses.restQ, r4);
       }
 
@@ -306,12 +326,8 @@ function Record({
       }
       if (t > 2.3) {
         returnAt.current = null;
-        // Home: the vinyl rides inside the sleeve, hidden, so it doesn't reappear and fly in.
-        if (d) {
-          d.position.copy(s.position);
-          d.quaternion.copy(s.quaternion).multiply(UPRIGHT);
-          d.visible = false;
-        }
+        // Home: hidden behind the sleeve; the resting branch keeps it there.
+        if (d) d.visible = false;
       }
       frame.invalidate();
       return;
@@ -320,20 +336,30 @@ function Record({
     if (!playing) {
       // Back in the crate; a hovered record is pulled half out so its cover shows.
       scratch.v.copy(rest.position);
-      // Slid up along its own lean, within its slot, so the records in front still hide its
-      // lower half (lifting straight up would tip a leaning sleeve forward through them).
-      if (hovered) scratch.v.add(new THREE.Vector3(0, 0.36, 0).applyQuaternion(rest.quaternion));
+      if (hovered) scratch.v.copy(poses.browsePos);
       const k = reducedMotion ? 1 : damp(delta, hovered ? 12 : 7);
       s.position.lerp(scratch.v, k);
       s.quaternion.slerp(poses.restQ, k);
       let moving = s.position.distanceTo(scratch.v) > EPS || s.quaternion.angleTo(poses.restQ) > EPS;
       if (d) {
-        // The vinyl slips back into its sleeve before it disappears.
-        const kd = reducedMotion ? 1 : damp(delta, 9);
-        d.position.lerp(s.position, kd);
-        d.quaternion.slerp(scratch.q.copy(s.quaternion).multiply(UPRIGHT), kd);
-        d.visible = d.position.distanceTo(s.position) > 0.03;
-        moving ||= d.visible;
+        // The vinyl's place is just behind the sleeve's back, hidden by it.
+        scratch.q.copy(s.quaternion);
+        scratch.v.copy(BEHIND_SLEEVE).applyQuaternion(scratch.q).add(s.position);
+        scratch.q.multiply(UPRIGHT);
+        if (d.visible && !reducedMotion) {
+          // Put back before it ever landed (play cancelled mid-flight): it eases home, then hides.
+          const kd = damp(delta, 9);
+          d.position.lerp(scratch.v, kd);
+          d.quaternion.slerp(scratch.q, kd);
+          d.visible = d.position.distanceTo(scratch.v) > 0.03;
+          moving ||= d.visible;
+        } else {
+          // Already home: it rides along with the sleeve, out of sight, so lifting the
+          // sleeve to browse never drags a lagging vinyl through its cover.
+          d.position.copy(scratch.v);
+          d.quaternion.copy(scratch.q);
+          d.visible = false;
+        }
       }
       if (moving) frame.invalidate();
       else if (withDisc) onSettled(record.id);
@@ -366,7 +392,7 @@ function Record({
       }
       d.visible = t > 0.5;
     }
-    if (spinner.current && p3 >= 1 && !reducedMotion) spinner.current.rotation.y -= step(delta) * 3.5; // 33⅓ rpm
+    if (spinner.current && p3 >= 1 && !reducedMotion) spinner.current.rotation.y -= step(delta) * SPIN;
     // A playing record keeps turning, so the loop runs while it plays (and stops when it is put away).
     if (!reducedMotion || t < 0.1) frame.invalidate();
   });
@@ -573,6 +599,8 @@ function Deck({ playing, reducedMotion }: { playing: boolean; reducedMotion: boo
   useLayoutEffect(() => {
     parts.current = { pivot: deck.pivot };
     stage.platter.set(DECK.x, deck.platterY, DECK.z);
+    deck.scene.updateWorldMatrix(true, true);
+    stage.deck.setFromObject(deck.scene);
     vinyl.geometry = deck.vinylGeometry;
     vinyl.material = deck.vinylMaterial as THREE.Material;
     vinyl.half = deck.vinylHalf;
@@ -704,6 +732,8 @@ function CameraRig({
   const look = useRef(new THREE.Vector3(0, 0.5, 0));
   const goalPos = useRef(new THREE.Vector3());
   const goalLook = useRef(new THREE.Vector3());
+  /** Which record the camera last saw chosen, and when: it waits for the vinyl to land. */
+  const chosen = useRef<{ id: string | null; at: number }>({ id: null, at: 0 });
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -721,7 +751,25 @@ function CameraRig({
     const wide = aspect >= 1.2;
     const pos = goalPos.current;
     const target = goalLook.current;
-    if (selected) {
+    if (selected !== chosen.current.id) chosen.current = { id: selected, at: frame.clock.elapsedTime };
+    const spinning =
+      selected !== null && (reducedMotion || frame.clock.elapsedTime - chosen.current.at > SPINNING_AFTER);
+    let speed = 2.4;
+    if (spinning) {
+      // Once the record turns, rise over the turntable and look down on it, framed in the
+      // part of the screen the notes leave free (left of the panel, or above the sheet).
+      const c = stage.deck.getCenter(new THREE.Vector3());
+      const s = stage.deck.getSize(new THREE.Vector3());
+      const freeW = panel.side === "right" ? 1 - panel.share : 1;
+      const freeH = panel.side === "bottom" ? 1 - panel.share : 1;
+      const tilt = 0.3; // a little toward the room, so it reads as a turntable and not a plan
+      const h = Math.max((s.x * 1.3) / (2 * tan * aspect * freeW), (s.z * 1.45) / (2 * tan * freeH));
+      const dx = panel.side === "right" ? (2 * h * tan * aspect * panel.share) / 2 : 0;
+      const dz = panel.side === "bottom" ? (2 * h * tan * panel.share) / 2 : 0;
+      target.set(c.x + dx, c.y, c.z + dz);
+      pos.set(c.x + dx, c.y + h, c.z + dz + h * tilt);
+      speed = 1.7;
+    } else if (selected) {
       // Frame the crate front and the deck in the part of the screen the notes leave free.
       const free = panel.side === "right" ? 1 - panel.share : 1;
       const z = Math.max(
@@ -747,7 +795,7 @@ function CameraRig({
         pos.y -= pointer.current.y * 0.06;
       }
     }
-    const k = reducedMotion ? 1 : damp(delta, 2.4);
+    const k = reducedMotion ? 1 : damp(delta, speed);
     camera.position.lerp(pos, k);
     // Fog fades the room behind the stage, measured from wherever the camera is
     // (a phone frames the scene from much further back).
@@ -759,7 +807,8 @@ function CameraRig({
     }
     look.current.lerp(target, k);
     camera.lookAt(look.current);
-    if (camera.position.distanceTo(pos) > 2e-3 || look.current.distanceTo(target) > 2e-3) frame.invalidate();
+    const waiting = selected !== null && !spinning;
+    if (waiting || camera.position.distanceTo(pos) > 2e-3 || look.current.distanceTo(target) > 2e-3) frame.invalidate();
   });
   return null;
 }
