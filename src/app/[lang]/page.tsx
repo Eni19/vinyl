@@ -4,7 +4,7 @@ import { SITE_OWNER_SLUG } from "@/config/site";
 import { isLocale, type Locale } from "@/domain/i18n/locale";
 import { portfolioRepository } from "@/infrastructure/container";
 import { buildCatalog } from "@/ui/records/catalog";
-import { Intro } from "@/ui/records/Intro";
+import { Credits, Intro } from "@/ui/records/Intro";
 import { linerNotes } from "@/ui/records/LinerNotes";
 import { Shelf } from "@/ui/records/Shelf";
 import { getDictionary } from "./dictionaries";
@@ -33,6 +33,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         <Shelf
           records={records}
           intro={<Intro {...props} />}
+          credits={<Credits dict={dict} />}
           notes={linerNotes(props)}
           switcher={
             <Link className="liner-lang" href={`/${other}`} hrefLang={other} aria-label={dict.nav.switchLanguageLabel}>
@@ -49,7 +50,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             hint: r.hint,
             hintTouch: r.hintTouch,
             play: r.play,
-            browse: r.browse,
+            explore: r.explore,
           }}
         />
       </main>

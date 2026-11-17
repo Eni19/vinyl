@@ -76,8 +76,6 @@ interface SceneProps {
   /** The record pulled up for a look (from the pointer, the index, the wheel or the keys). */
   browsed: string | null;
   onBrowse: (id: string) => void;
-  /** An HTML element to keep just under the crate's front edge on screen. */
-  anchor?: React.RefObject<HTMLElement | null>;
   onSelect: (id: string) => void;
 }
 
@@ -813,19 +811,6 @@ function CameraRig({
   return null;
 }
 
-/** Keeps an HTML element under the crate: projects the crate's front-bottom edge to the screen. */
-function CrateAnchor({ anchor }: { anchor: React.RefObject<HTMLElement | null> }) {
-  const point = useMemo(() => new THREE.Vector3(), []);
-  useFrame(({ camera, size }) => {
-    const el = anchor.current;
-    if (!el) return;
-    point.copy(inCrate(new THREE.Vector3(CRATE.x, 0, stage.crateFront)).position).project(camera);
-    el.style.setProperty("--x", `${Math.round(((point.x + 1) / 2) * size.width)}px`);
-    el.style.setProperty("--y", `${Math.round(((1 - point.y) / 2) * size.height)}px`);
-  });
-  return null;
-}
-
 /** Mounts after the models inside the same Suspense boundary: the stage measurements are then set. */
 function Ready({ onReady }: { onReady: () => void }) {
   useEffect(() => onReady(), [onReady]);
@@ -841,7 +826,6 @@ function Scene({
   panel,
   browsed,
   onBrowse,
-  anchor,
   onSelect,
   font,
 }: SceneProps & { font: string }) {
@@ -893,7 +877,6 @@ function Scene({
           />
         ))}
       <CameraRig selected={selected} panel={panel} reducedMotion={reducedMotion} />
-      {anchor && modelsReady && <CrateAnchor anchor={anchor} />}
       <EffectComposer multisampling={4}>
         <Bloom intensity={0.55} luminanceThreshold={0.95} luminanceSmoothing={0.2} mipmapBlur />
         <Vignette offset={0.32} darkness={0.72} />

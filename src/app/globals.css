@@ -373,84 +373,184 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
   font-size: 1rem;
 }
 
-/* The browse control, kept under the crate's front edge by the scene. */
-.crate-browser {
-  --x: 50vw;
-  --y: 70vh;
-  position: absolute;
-  z-index: 15;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: stretch;
-  gap: 4px;
-  transform: translate(calc(var(--x) - 50%), calc(var(--y) + 22px));
+/* The intro and the record procession share the left column on desktop. */
+.shelf-side {
+  display: contents;
 }
 
-.crate-browser-step,
-.crate-browser-play {
-  min-height: 44px;
-  border: 0;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 160ms var(--ease-out);
+/* Model credits sit in a corner of the stage, out of the way. */
+.shelf-credits .credits {
+  margin: 0;
 }
 
-.crate-browser-step {
+@media (min-width: 861px) {
+  .shelf[data-live] .shelf-side {
+    position: absolute;
+    z-index: 10;
+    top: clamp(24px, 6vh, 64px);
+    bottom: clamp(16px, 3vh, 36px);
+    left: var(--margin);
+    width: min(36vw, 500px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 2.5vh, 28px);
+  }
+  .shelf[data-live] .shelf-intro {
+    position: static;
+    width: auto;
+  }
+  /* The procession replaces the crate links as the visible way in. */
+  .shelf[data-live] .crate,
+  .shelf[data-live] .shelf-intro .shelf-hint {
+    display: none;
+  }
+  .shelf[data-live] .shelf-credits {
+    position: absolute;
+    z-index: 5;
+    right: var(--margin);
+    bottom: 14px;
+    width: min(30vw, 420px);
+    text-align: right;
+  }
+}
+
+/* ---------- The record procession ---------- */
+.procession {
+  --cover: clamp(120px, 23vh, 224px);
+  --step: calc(var(--cover) * 0.92);
+  flex: 1;
+  min-height: 0;
   display: grid;
-  place-items: center;
-  width: 44px;
-  background: var(--paper-line);
-  color: var(--ink);
-}
-
-.crate-browser-play {
-  padding: 0 20px;
-  background: var(--lime);
-  color: var(--room);
-}
-
-.crate-browser-play:disabled {
-  background: var(--paper-line);
-  color: var(--ink-soft);
-  cursor: default;
-}
-
-.crate-browser-step:active,
-.crate-browser-play:not(:disabled):active {
-  transform: scale(0.95);
-}
-
-.crate-browser-now {
-  display: flex;
+  grid-template-columns: var(--cover) minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
-  width: 300px;
-  padding: 0 14px;
-  background: var(--paper);
-  white-space: nowrap;
+  gap: clamp(16px, 2vw, 28px);
+  touch-action: none;
+  user-select: none;
+  transition: opacity 300ms ease;
 }
 
-.crate-browser-swatch {
-  flex: none;
-  width: 12px;
-  height: 12px;
+.shelf[data-open] .procession {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.crate-browser-catalog {
-  flex: none;
+.procession-track {
+  position: relative;
+  height: 100%;
+  perspective: 700px;
+  perspective-origin: 50% 50%;
+  /* Sleeves further out fade into the room above and below. */
+  /* An alpha mask, not a colour fill. */
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); /* taste-skill-ignore */
+}
+
+.procession-item {
+  --depth: min(var(--abs), 3);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--cover);
+  height: var(--cover);
+  margin-top: calc(var(--cover) / -2);
+  transform: translateY(calc(var(--o) * var(--step))) translateZ(calc(var(--depth) * -110px))
+    rotateX(calc(var(--o) * -12deg)) scale(calc(1 - var(--depth) * 0.26));
+  opacity: calc(1 - var(--depth) * 0.3);
+  z-index: calc(10 - var(--abs));
+  transition:
+    transform 560ms var(--ease-out),
+    opacity 360ms ease;
+}
+
+/* The centre sleeve: full size, tipped like one held up from the crate. */
+.procession-item[data-offset="0"] {
+  transform: rotateZ(-4deg) rotateY(14deg) scale(1.04);
+}
+
+.procession-item[data-far] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.procession-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--sleeve);
+  outline-offset: 4px;
+}
+
+.procession-item img,
+.procession-blank {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.procession-item[data-browsed] {
+  opacity: 1;
+}
+
+.procession-item[data-browsed] a {
+  outline: 2px solid var(--lime);
+}
+
+.procession-now {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+}
+
+.procession-meta {
   font-size: var(--text-small);
   font-weight: 700;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
 
-.crate-browser-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.procession-title {
+  font-size: clamp(1.375rem, 2vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.05;
+  font-stretch: 85%;
+  text-wrap: balance;
+}
+
+.procession-play {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 0 18px;
+  border: 0;
+  background: var(--paper-line);
+  color: var(--ink);
+  font: inherit;
   font-weight: 700;
-  font-stretch: 90%;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out);
+}
+
+.procession-play svg {
+  width: 12px;
+  height: 12px;
+}
+
+.procession-play:active {
+  transform: scale(0.96);
+}
+
+.procession-hint {
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .procession-item {
+    transition: opacity 200ms ease;
+  }
 }
 
 /* Flat page (no WebGL or no script): intro, the crate, then the notes. */
@@ -835,6 +935,16 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
     background: var(--room);
   }
   .shelf[data-live][data-open] .crate {
+    display: none;
+  }
+  .shelf[data-live] .shelf-credits {
+    position: absolute;
+    left: var(--margin);
+    right: var(--margin);
+    bottom: 84px;
+    font-size: 0.6875rem;
+  }
+  .shelf[data-live][data-open] .shelf-credits {
     display: none;
   }
   .shelf-intro {

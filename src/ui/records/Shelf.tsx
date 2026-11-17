@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { SLEEVES, type RecordSpec } from "./catalog";
+import { Procession } from "./Procession";
 
 const ShelfScene = dynamic(() => import("./ShelfScene"), { ssr: false });
 
@@ -34,6 +35,8 @@ function hasWebGL(): boolean {
 export interface ShelfProps {
   records: RecordSpec[];
   intro: ReactNode;
+  /** Model credits (CC BY): in a corner of the stage. */
+  credits: ReactNode;
   /** Liner notes for each record: side A and side B, rendered on the server. */
   notes: Record<string, { a: ReactNode; b: ReactNode }>;
   labels: {
@@ -46,7 +49,7 @@ export interface ShelfProps {
     hint: string;
     hintTouch: string;
     play: string;
-    browse: string;
+    explore: string;
   };
   switcher: ReactNode;
 }
@@ -56,7 +59,7 @@ export interface ShelfProps {
  * on the turntable and opens its liner notes beside it, side A first. Without
  * WebGL the same notes read as a page under a grid of sleeves.
  */
-export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
+export function Shelf({ records, intro, credits, notes, labels, switcher }: ShelfProps) {
   const [webgl, setWebgl] = useState(false);
   const [ready, setReady] = useState(false);
   const [running, setRunning] = useState(true);
@@ -64,9 +67,10 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
   const [side, setSide] = useState<"a" | "b">("a");
   /** The record pulled up in the crate: what Enter plays. */
   const [browsed, setBrowsed] = useState<string | null>(null);
+  /** The record at the centre of the procession. */
+  const [center, setCenter] = useState(0);
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const anchor = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
   const reducedMotion = useMedia("(prefers-reduced-motion: reduce)", false);
@@ -119,18 +123,26 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
   }, [selected, live, play]);
 
   const index = selected ? ids.indexOf(selected) : -1;
-  const current = records.find((r) => r.id === browsed) ?? null;
   const step = (delta: number) => play(ids[(index + delta + ids.length) % ids.length]);
 
-  // Flip through the crate one record at a time: wheel over the scene, or the arrow keys.
-  const flip = useCallback(
-    (delta: number) =>
-      setBrowsed((current) => {
-        const at = current ? ids.indexOf(current) : -1;
-        const next = at < 0 ? (delta > 0 ? 0 : ids.length - 1) : Math.min(ids.length - 1, Math.max(0, at + delta));
-        return ids[next];
-      }),
+  // Turn the procession one record at a time (wheel, drag, arrow keys); the record
+  // that comes to the centre is pulled up in the crate.
+  const move = useCallback(
+    (delta: number) => {
+      const next = (((center + delta) % ids.length) + ids.length) % ids.length;
+      setCenter(next);
+      setBrowsed(ids[next]);
+    },
     // ids is derived from records on every render; records is the real dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [center, records],
+  );
+  // Pointing at a record in the 3D crate brings it round to the centre of the procession.
+  const browseFromScene = useCallback(
+    (id: string) => {
+      setBrowsed(id);
+      setCenter(ids.indexOf(id));
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [records],
   );
@@ -146,15 +158,15 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
       const now = performance.now();
       // One record per notch, and not faster than the eye can follow on a trackpad.
       if (Math.abs(pending) < 40 || now - last < 110) return;
-      flip(pending > 0 ? 1 : -1);
+      move(pending > 0 ? 1 : -1);
       pending = 0;
       last = now;
     };
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.closest("input, textarea, [role=tablist]")) return;
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") flip(1);
-      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") flip(-1);
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") move(1);
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") move(-1);
       // On a link or button, Enter already does that element's job.
       else if (e.key === "Enter" && browsed && !target.closest("a, button")) play(browsed);
       else return;
@@ -166,7 +178,7 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
       el.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKey);
     };
-  }, [live, selected, browsed, flip, play]);
+  }, [live, selected, browsed, move, play]);
 
   return (
     <div ref={root} className="shelf" data-live={live || undefined} data-open={selected ?? undefined}>
@@ -181,62 +193,38 @@ export function Shelf({ records, intro, notes, labels, switcher }: ShelfProps) {
             panel={wide ? { side: "right", share: 0.44 } : { side: "bottom", share: 0.6 }}
             running={running}
             browsed={browsed}
-            onBrowse={setBrowsed}
-            anchor={anchor}
+            onBrowse={browseFromScene}
             onSelect={(id) => play(id === selected ? null : id)}
             onReady={() => setReady(true)}
           />
         )}
 
-        <div className="shelf-intro" aria-hidden={live && selected ? true : undefined}>
-          {intro}
-          {live && (
-            <p className="shelf-hint">
-              <span className="hint-pointer">{labels.hint}</span>
-              <span className="hint-touch">{labels.hintTouch}</span>
-            </p>
+        <div className="shelf-side">
+          <div className="shelf-intro" aria-hidden={live && selected ? true : undefined}>
+            {intro}
+            {live && (
+              <p className="shelf-hint">
+                <span className="hint-pointer">{labels.hint}</span>
+                <span className="hint-touch">{labels.hintTouch}</span>
+              </p>
+            )}
+          </div>
+          {live && wide && (
+            <Procession
+              records={records}
+              center={center}
+              browsed={browsed}
+              hidden={selected !== null}
+              labels={{ shelf: labels.shelf, play: labels.play, hint: labels.explore }}
+              onBrowse={setBrowsed}
+              onLeave={() => setBrowsed((b) => (b === null ? null : ids[center]))}
+              onMove={move}
+              onPlay={(id) => play(id)}
+            />
           )}
         </div>
 
-        {/* Under the crate: the record you are looking at, a step either way, and Play.
-            The scene moves it so it stays under the crate whatever the screen size. */}
-        {live && wide && !selected && (
-          <div ref={anchor} className="crate-browser">
-            <button type="button" className="crate-browser-step" onClick={() => flip(-1)} aria-label={labels.previous}>
-              <svg className="chevron" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
-              </svg>
-            </button>
-            <p className="crate-browser-now" aria-live="polite">
-              {current ? (
-                <>
-                  <span
-                    className="crate-browser-swatch"
-                    style={{ background: SLEEVES[current.sleeve].sleeve }}
-                    aria-hidden
-                  />
-                  <span className="crate-browser-catalog">{current.catalog}</span>
-                  <span className="crate-browser-title">{current.title}</span>
-                </>
-              ) : (
-                <span className="crate-browser-title">{labels.browse}</span>
-              )}
-            </p>
-            <button type="button" className="crate-browser-step" onClick={() => flip(1)} aria-label={labels.next}>
-              <svg className="chevron" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className="crate-browser-play"
-              onClick={() => current && play(current.id)}
-              disabled={!current}
-            >
-              {labels.play}
-            </button>
-          </div>
-        )}
+        <div className="shelf-credits">{credits}</div>
 
         {/* Every record is also a plain link: keyboard, screen readers and no-WebGL visitors use these. */}
         <nav className="crate" aria-label={labels.shelf}>
