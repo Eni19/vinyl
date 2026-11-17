@@ -4,6 +4,7 @@ import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { Bloom, EffectComposer, Outline, Select, Selection, Vignette } from "@react-three/postprocessing";
 import { SLEEVES, type RecordSpec } from "./catalog";
@@ -19,7 +20,7 @@ import { backTexture, coverTexture, labelTexture, woodTexture } from "./textures
  *  - "Vinyl Recorder with 'Until i Found You' disc" by ImSiyue
  */
 
-const SLEEVE = { w: 1, h: 1, d: 0.014 };
+const SLEEVE = { w: 1, h: 1, d: 0.017 };
 const DISC_RADIUS = 0.47;
 /** The crate is turned toward the deck (yaw, radians) so the sleeves face the room at an angle. */
 const CRATE = { x: -0.95, width: 1.32, wall: 0.07, yaw: 0.36 };
@@ -125,12 +126,14 @@ function useTexture<T extends THREE.Texture>(make: () => T | Promise<T>, deps: u
  * meant six draw calls, twice over with shadows.
  */
 const SLEEVE_GEOMETRY = (() => {
-  const g = new THREE.BoxGeometry(SLEEVE.w, SLEEVE.h, SLEEVE.d);
-  // BoxGeometry writes its faces in the order +x, -x, +y, -y, +z, -z, six indices each.
+  // Edges rounded by a hair (5 mm on a 31.5 cm sleeve, scaled), like worn board.
+  const g = new RoundedBoxGeometry(SLEEVE.w, SLEEVE.h, SLEEVE.d, 2, 0.005);
+  // It keeps BoxGeometry's face order (+x, -x, +y, -y, +z, -z), equal vertex counts each.
+  const face = g.getAttribute("position").count / 6;
   g.clearGroups();
-  g.addGroup(0, 24, 0);
-  g.addGroup(24, 6, 1);
-  g.addGroup(30, 6, 2);
+  g.addGroup(0, face * 4, 0);
+  g.addGroup(face * 4, face, 1);
+  g.addGroup(face * 5, face, 2);
   return g;
 })();
 
@@ -189,19 +192,35 @@ function Disc({
 /** Raycasting off: a hit area that ignores the pointer. */
 const NO_RAYCAST = () => null;
 
+/** How far a record leans back at rest: further back in the crate, a touch more. */
+const restLean = (slot: number) => -0.2 - slot * 0.014;
+
+/**
+ * Crate digging, after risq's cratedigger: once a record is picked out, the ones in
+ * front of it tip forward, the ones behind lean further back, and it stands up a little
+ * raised in the gap. Every record pivots on its own bottom edge.
+ */
+const DIG = { forward: 0.3, back: -0.14, shown: -0.02, lift: 0.3 };
+export type Dig = "rest" | "front" | "shown" | "back";
+
+/** Where a record's bottom edge sits on the crate floor (crate-local). */
+function slotBottom(slot: number) {
+  // Standing back from the front wall leaves room for the front records to tip forward
+  // without passing through it. Each one further back sits a hair higher, so from above
+  // the top strip of every sleeve shows. A little right of centre: a scanned sleeve leans
+  // against the crate's left wall.
+  return new THREE.Vector3(CRATE.x + 0.045, 0.06 + slot * 0.036, stage.crateFront - CRATE.wall - 0.12 - slot * 0.062);
+}
+
+/** A record leaning at `lean` (about x) on its bottom edge, slid `lift` up along itself. */
+function slotPose(slot: number, lean: number, lift = 0) {
+  const up = new THREE.Vector3(0, Math.cos(lean), Math.sin(lean));
+  return inCrate(slotBottom(slot).add(up.multiplyScalar(SLEEVE.h / 2 + lift)), new THREE.Euler(lean, 0, 0));
+}
+
 /** A record's resting place: low in the crate, leaning back, one behind the other. */
 function restPose(slot: number) {
-  // All sleeves stand on the crate floor; the ones further back lean a little more
-  // and sit a hair higher, so from above the top strip of every sleeve shows.
-  const lean = -0.2 - slot * 0.014;
-  // Kept toward the front of the crate: the scan carries its own records further back,
-  // and ours would cut into them.
-  // A little right of centre too: a scanned sleeve leans against the crate's left wall.
-  const z = stage.crateFront - CRATE.wall - 0.055 - slot * 0.062;
-  return inCrate(
-    new THREE.Vector3(CRATE.x + 0.045, 0.06 + slot * 0.036 + (SLEEVE.h / 2) * Math.cos(lean), z),
-    new THREE.Euler(lean, 0, 0),
-  );
+  return slotPose(slot, restLean(slot));
 }
 
 function Record({
@@ -211,7 +230,7 @@ function Record({
   playing,
   withDisc,
   interactive,
-  hovered,
+  dig,
   side,
   labels,
   reducedMotion,
@@ -228,7 +247,8 @@ function Record({
   withDisc: boolean;
   /** Pointing at it browses it: only once the crate has been clicked open. */
   interactive: boolean;
-  hovered: boolean;
+  /** Its place in the dig: at rest, tipped forward, shown (picked out) or leaning back. */
+  dig: Dig;
   side: "a" | "b";
   labels: SceneLabels;
   reducedMotion: boolean;
@@ -249,6 +269,7 @@ function Record({
     withDisc,
   );
   const colors = SLEEVES[record.sleeve];
+  const edge = useMemo(() => new THREE.Color(colors.sleeve).multiplyScalar(0.5), [colors.sleeve]);
   const rest = useMemo(() => restPose(slot), [slot]);
 
   const poses = useMemo(() => {
@@ -269,9 +290,13 @@ function Record({
     const discInLiftedQ = liftedQ.clone().multiply(UPRIGHT);
     // On the way back the sleeve comes down straight into its own slot.
     const aboveRest = rest.position.clone().add(new THREE.Vector3(0, 0.78, 0));
-    // Pulled up for a look: slid up along its own lean, within its slot (lifting straight up
-    // would tip a leaning sleeve forward through the records in front of it).
-    const browsePos = rest.position.clone().add(new THREE.Vector3(0, 0.36, 0).applyQuaternion(rest.quaternion));
+    // The dig: where it sits while another record (or itself) is picked out.
+    const digPoses: Record<Dig, { position: THREE.Vector3; quaternion: THREE.Quaternion }> = {
+      rest,
+      front: slotPose(slot, DIG.forward),
+      shown: slotPose(slot, DIG.shown, DIG.lift),
+      back: slotPose(slot, restLean(slot) + DIG.back),
+    };
     return {
       restQ,
       liftedPos,
@@ -282,9 +307,9 @@ function Record({
       outPos,
       discInLiftedQ,
       aboveRest,
-      browsePos,
+      digPoses,
     };
-  }, [rest]);
+  }, [rest, slot]);
   const scratch = useMemo(() => ({ v: new THREE.Vector3(), q: new THREE.Quaternion() }), []);
   /** How far the last play got (seconds), and when the record started its way back. */
   const playedFor = useRef(0);
@@ -316,10 +341,8 @@ function Record({
       s.position.lerpVectors(poses.displayPos, poses.liftedPos, r1);
       s.quaternion.slerpQuaternions(poses.displayQ, poses.liftedQ, r1);
       if (r4 > 0) {
-        s.position
-          .lerpVectors(poses.liftedPos, poses.aboveRest, r4)
-          .lerp(hovered ? poses.browsePos : rest.position, r5);
-        s.quaternion.slerpQuaternions(poses.liftedQ, poses.restQ, r4);
+        s.position.lerpVectors(poses.liftedPos, poses.aboveRest, r4).lerp(poses.digPoses[dig].position, r5);
+        s.quaternion.slerpQuaternions(poses.liftedQ, poses.digPoses[dig].quaternion, r4);
       }
 
       if (d) {
@@ -338,13 +361,12 @@ function Record({
     }
 
     if (!playing) {
-      // Back in the crate; a hovered record is pulled half out so its cover shows.
-      scratch.v.copy(rest.position);
-      if (hovered) scratch.v.copy(poses.browsePos);
-      const k = reducedMotion ? 1 : damp(delta, hovered ? 12 : 7);
-      s.position.lerp(scratch.v, k);
-      s.quaternion.slerp(poses.restQ, k);
-      let moving = s.position.distanceTo(scratch.v) > EPS || s.quaternion.angleTo(poses.restQ) > EPS;
+      // In the crate, in its place in the dig.
+      const goal = poses.digPoses[dig];
+      const k = reducedMotion ? 1 : damp(delta, dig === "shown" ? 8 : 6);
+      s.position.lerp(goal.position, k);
+      s.quaternion.slerp(goal.quaternion, k);
+      let moving = s.position.distanceTo(goal.position) > EPS || s.quaternion.angleTo(goal.quaternion) > EPS;
       if (d) {
         // The vinyl's place is just behind the sleeve's back, hidden by it.
         scratch.q.copy(s.quaternion);
@@ -407,12 +429,13 @@ function Record({
           While it is pulled up the area grows to cover the raised cover too, so a click on
           what you see lands on this record and not on the one behind it. */}
       <mesh
-        position={[rest.position.x, rest.position.y + 0.08 + (hovered ? 0.17 : 0), rest.position.z]}
+        // Fixed where the record rests, whatever the dig is doing: moving the pointer up and
+        // down the strips scrubs through the crate, and moving records never steal the pointer.
+        position={[rest.position.x, rest.position.y + 0.08, rest.position.z]}
         // Invisible: three.js still raycasts it, but it costs no draw call.
         visible={false}
         raycast={interactive ? THREE.Mesh.prototype.raycast : NO_RAYCAST}
         quaternion={rest.quaternion}
-        scale={[1, hovered ? (SLEEVE.h + 0.5) / (SLEEVE.h + 0.16) : 1, 1]}
         onPointerOver={(e) => {
           e.stopPropagation();
           onHover(record.id);
@@ -435,7 +458,7 @@ function Record({
       <group ref={sleeve} position={rest.position} quaternion={rest.quaternion}>
         <mesh geometry={SLEEVE_GEOMETRY} castShadow receiveShadow>
           {/* Groups: edges, cover, back. */}
-          <meshStandardMaterial attach="material-0" color={colors.sleeve} roughness={0.75} />
+          <meshStandardMaterial attach="material-0" color={edge} roughness={0.9} />
           <meshStandardMaterial
             key={cover ? "cover" : "cover-blank"}
             attach="material-1"
@@ -505,8 +528,17 @@ function shadowed(root: THREE.Object3D) {
  * The scanned crate. Closed, pointing at it outlines it and a click opens it; open,
  * pointing at its records pulls them up (see Record). Escape or a click elsewhere closes it.
  */
-function Crate({ open, onOpen }: { open: boolean; onOpen: () => void }) {
-  const [hover, setHover] = useState(false);
+function Crate({
+  open,
+  hover,
+  setHover,
+  onOpen,
+}: {
+  open: boolean;
+  hover: boolean;
+  setHover: (hover: boolean) => void;
+  onOpen: () => void;
+}) {
   // The outline changes with no prop on a three object changing, so ask for a frame.
   const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
@@ -854,6 +886,13 @@ function CameraRig({
   return null;
 }
 
+/** A record's place in the dig, given the index of the record picked out (-1: none). */
+function digOf(index: number, picked: number): Dig {
+  if (picked < 0) return "rest";
+  if (index === picked) return "shown";
+  return index < picked ? "front" : "back";
+}
+
 /** Mounts after the models inside the same Suspense boundary: the stage measurements are then set. */
 function Ready({ onReady }: { onReady: () => void }) {
   useEffect(() => onReady(), [onReady]);
@@ -875,6 +914,7 @@ function Scene({
   onCrateOpen,
 }: SceneProps & { font: string; crateOpen: boolean; onCrateOpen: (open: boolean) => void }) {
   const [modelsReady, setModelsReady] = useState(false);
+  const [crateHover, setCrateHover] = useState(false);
   // The crate is browsable by pointer only while open, and never while a record plays.
   const open = crateOpen && selected === null;
   useEffect(() => {
@@ -908,7 +948,7 @@ function Scene({
       <Room />
       <Lights playing={selected !== null} />
       <Suspense fallback={null}>
-        <Crate open={open} onOpen={() => onCrateOpen(true)} />
+        <Crate open={open} hover={crateHover} setHover={setCrateHover} onOpen={() => onCrateOpen(true)} />
         <Deck playing={selected !== null} reducedMotion={reducedMotion} />
         <Ready onReady={() => setModelsReady(true)} />
       </Suspense>
@@ -923,7 +963,7 @@ function Scene({
             playing={selected === record.id}
             withDisc={out.includes(record.id)}
             interactive={open}
-            hovered={browsed === record.id && !selected}
+            dig={digOf(i, selected ? -1 : records.findIndex((r) => r.id === browsed))}
             side={side}
             labels={labels}
             reducedMotion={reducedMotion}
@@ -937,14 +977,19 @@ function Scene({
         ))}
       <CameraRig selected={selected} panel={panel} reducedMotion={reducedMotion} />
       <EffectComposer multisampling={4} autoClear={false}>
-        {/* The crate's outline: soft ink while pointed at, lime once open. */}
-        <Outline
-          visibleEdgeColor={open ? 0xe1ef4a : 0xf1ede4}
-          hiddenEdgeColor={0x000000}
-          edgeStrength={open ? 6 : 4}
-          blur
-          xRay={false}
-        />
+        {/* The crate's outline: soft ink while pointed at, lime once open. Mounted only
+            then, because the pass costs extra draws on every frame it exists. */}
+        {open || crateHover ? (
+          <Outline
+            visibleEdgeColor={open ? 0xe1ef4a : 0xf1ede4}
+            hiddenEdgeColor={0x000000}
+            edgeStrength={open ? 6 : 4}
+            blur
+            xRay={false}
+          />
+        ) : (
+          <></>
+        )}
         <Bloom intensity={0.55} luminanceThreshold={0.95} luminanceSmoothing={0.2} mipmapBlur />
         <Vignette offset={0.32} darkness={0.72} />
       </EffectComposer>
@@ -952,8 +997,15 @@ function Scene({
   );
 }
 
-export default function ShelfScene(props: SceneProps & { running: boolean; onReady: () => void }) {
-  const { running, onReady, ...scene } = props;
+export default function ShelfScene(
+  props: SceneProps & {
+    running: boolean;
+    onReady: () => void;
+    /** A click on the scene that hit nothing. */
+    onMiss: () => void;
+  },
+) {
+  const { running, onReady, onMiss, ...scene } = props;
   const [font, setFont] = useState<string | null>(null);
   const [crateOpen, setCrateOpen] = useState(false);
   useEffect(() => {
@@ -970,7 +1022,10 @@ export default function ShelfScene(props: SceneProps & { running: boolean; onRea
       camera={{ position: [0, 1.8, 6], fov: 32, near: 0.05, far: 40 }}
       gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
       onCreated={() => onReady()}
-      onPointerMissed={() => setCrateOpen(false)}
+      onPointerMissed={() => {
+        setCrateOpen(false);
+        onMiss();
+      }}
       aria-hidden
     >
       <color attach="background" args={[BG]} />

@@ -493,6 +493,13 @@ body:has(.shelf[data-open][data-live]) .lang-switch {
   opacity: 1;
 }
 
+/* A side sleeve brightens under the pointer: a click brings it to the centre. */
+@media (hover: hover) and (pointer: fine) {
+  .procession-item:not([data-offset="0"]):hover {
+    opacity: 1;
+  }
+}
+
 .procession-item[data-browsed] a {
   outline: 2px solid var(--lime);
 }

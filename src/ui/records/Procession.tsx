@@ -38,8 +38,6 @@ export interface ProcessionProps {
   browsed: string | null;
   hidden: boolean;
   labels: { shelf: string; play: string; hint: string; previous: string; next: string };
-  onBrowse: (id: string) => void;
-  onLeave: () => void;
   onMove: (delta: number) => void;
   /** Turn straight to the record at this index. */
   onGo: (index: number) => void;
@@ -49,21 +47,11 @@ export interface ProcessionProps {
 /**
  * A vertical procession of sleeves under the intro, after the record label site
  * "Not The Final Vinyl": the centre sleeve large and tilted, the others receding in
- * depth above and below, the catalogue wrapping around. Scroll or drag to move it;
- * pointing at a sleeve pulls that record up in the crate; a click plays it.
+ * depth above and below, the catalogue wrapping around. Scroll, drag, the rail or a
+ * click on a side sleeve brings a record to the centre, which pulls it up in the crate;
+ * a click on the centre sleeve plays it.
  */
-export function Procession({
-  records,
-  center,
-  browsed,
-  hidden,
-  labels,
-  onBrowse,
-  onLeave,
-  onMove,
-  onGo,
-  onPlay,
-}: ProcessionProps) {
+export function Procession({ records, center, browsed, hidden, labels, onMove, onGo, onPlay }: ProcessionProps) {
   const urls = useCoverUrls(records);
   const count = records.length;
   const shown = records.find((r) => r.id === browsed) ?? records[center];
@@ -74,7 +62,6 @@ export function Procession({
       className="procession"
       aria-label={labels.shelf}
       aria-hidden={hidden || undefined}
-      onPointerLeave={onLeave}
       onPointerDown={(e) => {
         drag.current = { y: e.clientY, moved: false };
       }}
@@ -143,16 +130,20 @@ export function Procession({
                 href={`#${record.id}`}
                 tabIndex={far ? -1 : 0}
                 aria-label={`${record.catalog} ${record.title}`}
-                onPointerEnter={() => onBrowse(record.id)}
-                onFocus={() => {
-                  onBrowse(record.id);
-                  if (offset !== 0) onMove(offset);
+                aria-current={offset === 0 || undefined}
+                onFocus={(e) => {
+                  // Tabbing to a sleeve brings it to the centre. A mouse press also focuses
+                  // it, but there the click decides (centre first, play on the next click).
+                  if (offset !== 0 && e.currentTarget.matches(":focus-visible")) onMove(offset);
                 }}
                 onClick={(e) => {
                   e.preventDefault();
                   // A drag that ends on a sleeve is a move, not a click.
                   if (drag.current?.moved) return;
-                  onPlay(record.id);
+                  // A side sleeve comes round to the centre (and up in the crate); the
+                  // centre one plays.
+                  if (offset !== 0) onMove(offset);
+                  else onPlay(record.id);
                 }}
               >
                 {urls[record.id] ? (

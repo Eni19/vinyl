@@ -12,4 +12,4 @@ This work is based on "Scan of Vinyl records in box crate" (https://sketchfab.co
 
 Changes made for this site:
 * Compressed (meshopt) and textures resized.
-* The scanned block of LP records inside the crate was removed; the leaning "Mood Ellington" sleeve was kept.
+* The scanned LP records inside the crate were removed (the block and a stray one beside it); the leaning "Mood Ellington" sleeve was kept.

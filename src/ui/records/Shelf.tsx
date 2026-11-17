@@ -117,6 +117,8 @@ export function Shelf({ records, intro, credits, notes, labels, switcher }: Shel
     else lastTrigger.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && selected) play(null);
+      // With nothing playing, Escape lets go of the picked record: the crate settles back.
+      else if (e.key === "Escape") setBrowsed(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -182,7 +184,18 @@ export function Shelf({ records, intro, credits, notes, labels, switcher }: Shel
 
   return (
     <div ref={root} className="shelf" data-live={live || undefined} data-open={selected ?? undefined}>
-      <div ref={stage} className="shelf-stage">
+      <div
+        ref={stage}
+        className="shelf-stage"
+        onClick={(e) => {
+          // A click on nothing in particular lets go of the picked record, as if you had
+          // dropped it back: the crate settles to rest (the procession stays where it is).
+          // Controls, links and the canvas (handled by the scene) keep their own clicks.
+          const target = e.target as HTMLElement;
+          if (selected || target.closest("a, button, canvas, .procession, .liner, .crate")) return;
+          setBrowsed(null);
+        }}
+      >
         {webgl && (
           <ShelfScene
             records={records}
@@ -196,6 +209,9 @@ export function Shelf({ records, intro, credits, notes, labels, switcher }: Shel
             onBrowse={browseFromScene}
             onSelect={(id) => play(id === selected ? null : id)}
             onReady={() => setReady(true)}
+            onMiss={() => {
+              if (!selected) setBrowsed(null);
+            }}
           />
         )}
 
@@ -222,8 +238,6 @@ export function Shelf({ records, intro, credits, notes, labels, switcher }: Shel
                 previous: labels.previous,
                 next: labels.next,
               }}
-              onBrowse={setBrowsed}
-              onLeave={() => setBrowsed((b) => (b === null ? null : ids[center]))}
               onMove={move}
               onGo={(i) => {
                 setCenter(i);
